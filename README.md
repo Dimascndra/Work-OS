@@ -1,59 +1,125 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Work OS - Personal Management Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Work OS is a comprehensive Laravel-based application designed to manage personal and professional workflows. It includes robust modules for security credentials, infrastructure monitoring, and daily productivity tools, all wrapped in a premium Metronic-style interface.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🔐 Security Layer
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   **Credentials Manager**: Securely store logins and secrets. Passwords and notes are automatically encrypted in the database using Laravel's encryption.
+-   **Activity Logs**: Track important user actions and system events for audit purposes.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🌐 Infrastructure Layer
 
-## Learning Laravel
+-   **Server Management**: Keep track of your VPS/Dedicated servers (IP, Port, OS, Status). Securely store SSH private keys.
+-   **Domain Monitoring**: Monitor SSL expiry and domain status (Healthy/Down/Warning).
+-   **Backups**: Log and track server backup records (File name, Size, Status).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### ⚡ Productivity Layer (Daily Tools)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **Tasks (Kanban)**: Manage daily tasks with priorities (Low/Medium/High) and status (Todo/In Progress/Review/Done).
+-   **Code Snippets**: Store useful code blocks (PHP, JS, Bash, etc.) with syntax highlighting and tagging.
+-   **Subscriptions**: Track recurring expenses (SaaS, Server bills) with billing cycles and due dates.
 
-## Laravel Sponsors
+## 🛠️ Installation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Follow these steps to set up the project locally:
 
-### Premium Partners
+### 1. Clone the Repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/AbdoelMadjid/work-os.git
+cd work-os
+```
 
-## Contributing
+### 2. Install Dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**PHP Dependencies:**
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Node.js Dependencies:**
 
-## Security Vulnerabilities
+```bash
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Environment Setup
 
-## License
+Copy the example environment file and configure your database credentials:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set your database connection details (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+
+### 4. Generate App Key
+
+```bash
+php artisan key:generate
+```
+
+### 5. Run Migrations
+
+Create the necessary database tables:
+
+```bash
+php artisan migrate
+```
+
+### 6. Build Assets
+
+Compile the frontend assets using Vite:
+
+```bash
+npm run build
+```
+
+### 7. Run the Application
+
+Start the local development server:
+
+```bash
+php artisan serve
+```
+
+Visit `http://localhost:8000` in your browser.
+
+## 📖 Application Workflow
+
+### Authentication
+
+-   Register a new account or login with existing credentials.
+-   The dashboard is protected and requires authentication.
+
+### Managing Credentials
+
+1. Navigate to **Security > Credentials**.
+2. Click **Add New** to store a new login.
+3. Use the **Copy** button to quickly copy passwords to your clipboard.
+
+### Monitoring Infrastructure
+
+1. **Servers**: Add your server details in **Infrastructure > Servers**. Store SSH keys securely.
+2. **Monitors**: Add domains to monitor in **Infrastructure > Domain Monitors**.
+3. **Backups**: Log manual or automated backup results in **Infrastructure > Backups**.
+
+### Daily Productivity
+
+1. **Tasks**: Use the **Productivity > Tasks** section to manage your daily to-do list.
+2. **Snippets**: Save reusable code in **Productivity > Snippets**.
+3. **Subscriptions**: Keep track of your monthly/yearly bills in **Productivity > Subscriptions**.
+
+## 💻 Tech Stack
+
+-   **Framework**: Laravel 12
+-   **UI Theme**: Metronic (Custom Blade Components)
+-   **Frontend**: Blade, Alpine.js (Lightweight), Bootstrap (via Metronic)
+-   **Database**: MySQL/MariaDB
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

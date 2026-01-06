@@ -19,6 +19,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Security Modules
+    Route::get('/credentials', [App\Http\Controllers\CredentialController::class, 'index'])->name('credentials.index');
+    Route::get('/credentials/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('credentials.create');
+    Route::post('/credentials', [App\Http\Controllers\CredentialController::class, 'store'])->name('credentials.store');
+    Route::get('/credentials/{credential}/edit', [App\Http\Controllers\CredentialController::class, 'edit'])->name('credentials.edit');
+    Route::put('/credentials/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('credentials.update');
+
+    Route::get('/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    // Infrastructure Modules
+    Route::resource('servers', App\Http\Controllers\ServerController::class);
+    Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
+    Route::resource('server-backups', App\Http\Controllers\ServerBackupController::class)->except(['show', 'edit', 'update']);
+
+    // Productivity Modules
+    Route::resource('tasks', App\Http\Controllers\TaskController::class);
+    Route::resource('snippets', App\Http\Controllers\SnippetController::class);
+    Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
 });
 
 require __DIR__ . '/auth.php';
