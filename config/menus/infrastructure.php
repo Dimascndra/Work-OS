@@ -19,4 +19,9 @@ return [
         'icon' => 'Files/Cloud-upload',
         'route' => '/server-backups',
     ],
+    [
+        'title' => 'SSH Keys',
+        'icon' => 'Communication/Shield-user',
+        'route' => '/ssh-keys',
+    ],
 ];
