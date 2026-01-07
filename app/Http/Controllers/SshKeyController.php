@@ -30,6 +30,7 @@ class SshKeyController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'title' => 'required|string|max:255',
             'ip_server' => 'required|string',
             'username' => 'required|string',
             'password' => 'nullable|string',
@@ -64,6 +65,7 @@ class SshKeyController extends Controller
     public function update(Request $request, SshKey $sshKey)
     {
         $validated = $request->validate([
+            'title' => 'required|string|max:255',
             'ip_server' => 'required|string',
             'username' => 'required|string',
             'password' => 'nullable|string',

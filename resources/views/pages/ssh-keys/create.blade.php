@@ -9,6 +9,16 @@
         <form action="{{ route('ssh-keys.store') }}" method="POST">
             @csrf
             <div class="form-group row">
+                <div class="col-lg-12">
+                    <label>Title <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control"
+                        placeholder="Enter Title (e.g. My Production Server)" value="{{ old('title') }}" required />
+                    @error('title')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-group row">
                 <div class="col-lg-6">
                     <label>IP Server <span class="text-danger">*</span></label>
                     <input type="text" name="ip_server" class="form-control" placeholder="Enter IP Address"
