@@ -21,10 +21,10 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <x-input label="SSH Port" name="port" type="number" value="22" required />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="os_type">OS Type <span class="text-danger">*</span></label>
                         <select class="form-control form-control-solid select2 @error('os_type') is-invalid @enderror"
@@ -40,7 +40,24 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="server_type">Server Type <span class="text-danger">*</span></label>
+                        <select
+                            class="form-control form-control-solid select2 @error('server_type') is-invalid @enderror"
+                            id="server_type" name="server_type">
+                            <option value="Physical">Physical Server</option>
+                            <option value="VPS" selected>VPS</option>
+                            <option value="Cloud">Cloud Instance</option>
+                            <option value="Container">Container</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        @error('server_type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Status</label>
                         <div class="checkbox-inline">

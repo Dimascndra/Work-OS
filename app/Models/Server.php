@@ -15,6 +15,7 @@ class Server extends Model
         'private_key',
         'public_key',
         'os_type',
+        'server_type',
         'is_active',
         'description',
     ];

@@ -29,6 +29,7 @@ class ServerController extends Controller
             'private_key' => 'nullable|string',
             'public_key' => 'nullable|string',
             'os_type' => 'required|string',
+            'server_type' => 'required|in:Physical,VPS,Cloud,Container,Other',
             'is_active' => 'boolean',
             'description' => 'nullable|string',
         ]);
@@ -57,6 +58,7 @@ class ServerController extends Controller
             'private_key' => 'nullable|string',
             'public_key' => 'nullable|string',
             'os_type' => 'required|string',
+            'server_type' => 'required|in:Physical,VPS,Cloud,Container,Other',
             'is_active' => 'boolean',
             'description' => 'nullable|string',
         ]);
