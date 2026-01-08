@@ -38,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
     Route::resource('snippets', App\Http\Controllers\SnippetController::class);
     Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
+
+    Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');
+    Route::post('/productivity/start', [App\Http\Controllers\TimeEntryController::class, 'store'])->name('productivity.store');
+    Route::patch('/productivity/{timeEntry}/stop', [App\Http\Controllers\TimeEntryController::class, 'update'])->name('productivity.stop');
 });
 
 require __DIR__ . '/auth.php';

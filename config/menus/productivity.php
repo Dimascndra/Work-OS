@@ -2,6 +2,11 @@
 
 return [
     [
+        'title' => 'Dashboard',
+        'icon' => 'Design/Layers',
+        'route' => '/productivity',
+    ],
+    [
         'title' => 'Tasks',
         'icon' => 'General/Clip', // Or General/Clipboard, General/Attachment1
         'route' => '/tasks',
