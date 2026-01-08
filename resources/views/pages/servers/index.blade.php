@@ -13,6 +13,7 @@
                         <th>Server Info</th>
                         <th>IP Address</th>
                         <th>OS</th>
+                        <th>Server Type</th>
                         <th>Status</th>
                         <th class="text-right">Actions</th>
                     </tr>
@@ -29,6 +30,20 @@
                             <td>
                                 <span
                                     class="label label-lg label-light-info label-inline">{{ strtoupper($server->os_type) }}</span>
+                            </td>
+                            <td>
+                                @php
+                                    $typeColors = [
+                                        'Physical' => 'primary',
+                                        'VPS' => 'success',
+                                        'Cloud' => 'info',
+                                        'Container' => 'warning',
+                                        'Other' => 'dark',
+                                    ];
+                                    $color = $typeColors[$server->server_type] ?? 'secondary';
+                                @endphp
+                                <span
+                                    class="label label-lg label-light-{{ $color }} label-inline">{{ $server->server_type }}</span>
                             </td>
                             <td>
                                 @if ($server->is_active)
