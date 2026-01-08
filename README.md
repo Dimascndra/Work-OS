@@ -8,11 +8,13 @@ Work OS adalah aplikasi berbasis Laravel yang komprehensif, dirancang untuk meng
 
 -   **Manajer Kredensial**: Simpan login dan rahasia dengan aman. Password dan catatan otomatis dienkripsi di database menggunakan enkripsi Laravel.
 -   **Log Aktivitas**: Lacak tindakan pengguna yang penting dan event sistem untuk tujuan audit.
+-   **Manajemen Pengguna**: Kelola pengguna sistem, peran, dan reset password admin.
 
 ### 🌐 Layer Infrastruktur
 
 -   **Manajemen Server**: Pantau server VPS/Dedicated Anda (IP, Port, OS, Status). Simpan SSH private key dengan aman.
 -   **Pemantauan Domain**: Pantau masa berlaku SSL dan status domain (Sehat/Down/Warning).
+-   **Manajemen SSH Keys**: Simpan dan kelola kunci SSH (Private/Public) untuk akses server yang aman.
 -   **Backup**: Catat dan lacak riwayat backup server (Nama file, Ukuran, Status).
 
 ### ⚡ Layer Produktivitas (Alat Harian)

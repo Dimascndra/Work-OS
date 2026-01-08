@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Security Modules
+    Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('/credentials', [App\Http\Controllers\CredentialController::class, 'index'])->name('credentials.index');
     Route::get('/credentials/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('credentials.create');
     Route::post('/credentials', [App\Http\Controllers\CredentialController::class, 'store'])->name('credentials.store');
@@ -32,7 +33,7 @@ Route::middleware('auth')->group(function () {
     // Infrastructure Modules
     Route::resource('servers', App\Http\Controllers\ServerController::class);
     Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
-    Route::resource('server-backups', App\Http\Controllers\ServerBackupController::class)->except(['show', 'edit', 'update']);
+    Route::resource('ssh-keys', App\Http\Controllers\SshKeyController::class);
 
     // Productivity Modules
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
