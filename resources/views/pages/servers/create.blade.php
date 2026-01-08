@@ -132,6 +132,11 @@
                     placeholder: "Select OS Type",
                     allowClear: true
                 });
+
+                $('#server_type').select2({
+                    placeholder: "Select Server Type",
+                    allowClear: true
+                });
             });
         </script>
     @endpush
