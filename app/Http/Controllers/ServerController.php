@@ -53,12 +53,20 @@ class ServerController extends Controller
             'ip_address' => 'required|ip',
             'port' => 'required|integer',
             'username' => 'required|string',
+            'password' => 'nullable|string',
             'private_key' => 'nullable|string',
+            'public_key' => 'nullable|string',
             'os_type' => 'required|string',
             'is_active' => 'boolean',
+            'description' => 'nullable|string',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+
+        // If password field is empty, don't update it (preserve existing password)
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
 
         $server->update($validated);
 
