@@ -10,7 +10,7 @@
             <table class="table table-head-custom table-vertical-center">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Server Info</th>
                         <th>IP Address</th>
                         <th>OS</th>
                         <th>Status</th>
@@ -23,7 +23,7 @@
                             <td>
                                 <span
                                     class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $server->name }}</span>
-                                <span class="text-muted font-weight-bold">{{ $server->username }}</span>
+                                <span class="text-muted font-size-sm">{{ $server->username }}</span>
                             </td>
                             <td>{{ $server->ip_address }}:{{ $server->port }}</td>
                             <td>
@@ -38,6 +38,18 @@
                                 @endif
                             </td>
                             <td class="text-right">
+                                <button type="button" class="btn btn-icon btn-light btn-hover-info btn-sm mr-2"
+                                    onclick="copyToClipboard('ssh -p {{ $server->port }} {{ $server->username . '@' . $server->ip_address }}', 'SSH Command')"
+                                    title="Copy SSH Command">
+                                    <i class="flaticon2-copy"></i>
+                                </button>
+                                @if ($server->password)
+                                    <button type="button" class="btn btn-icon btn-light btn-hover-warning btn-sm mr-2"
+                                        onclick="copyToClipboard('{{ $server->password }}', 'Password')"
+                                        title="Copy Password">
+                                        <i class="flaticon-security"></i>
+                                    </button>
+                                @endif
                                 <a href="{{ route('servers.edit', $server) }}"
                                     class="btn btn-icon btn-light btn-hover-primary btn-sm">
                                     <i class="flaticon2-edit"></i>
@@ -53,4 +65,33 @@
             </table>
         </div>
     </x-card>
+
+    @push('scripts')
+        <script>
+            window.copyToClipboard = function(text, type = 'Text') {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(function() {
+                        toastr.success(type + ' copied to clipboard!');
+                    }, function(err) {
+                        toastr.error('Failed to copy ' + type.toLowerCase() + '.');
+                    });
+                } else {
+                    // Fallback for older browsers
+                    var textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        var successful = document.execCommand('copy');
+                        if (successful) toastr.success(type + ' copied to clipboard!');
+                        else toastr.error('Failed to copy ' + type.toLowerCase() + '.');
+                    } catch (err) {
+                        toastr.error('Failed to copy ' + type.toLowerCase() + '.');
+                    }
+                    document.body.removeChild(textArea);
+                }
+            }
+        </script>
+    @endpush
 </x-metrolar-layout>

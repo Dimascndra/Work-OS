@@ -11,9 +11,4 @@ return [
         'icon' => 'Code/Time-schedule',
         'route' => '/domain-monitors',
     ],
-    [
-        'title' => 'SSH Keys',
-        'icon' => 'Communication/Shield-user',
-        'route' => '/ssh-keys',
-    ],
 ];

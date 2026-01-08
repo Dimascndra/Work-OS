@@ -6,7 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Server extends Model
 {
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'ip_address',
+        'port',
+        'username',
+        'password',
+        'private_key',
+        'public_key',
+        'os_type',
+        'is_active',
+        'description',
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -17,6 +28,7 @@ class Server extends Model
     {
         return [
             'private_key' => 'encrypted',
+            'password' => 'encrypted',
             'is_active' => 'boolean',
         ];
     }

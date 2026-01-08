@@ -33,7 +33,6 @@ Route::middleware('auth')->group(function () {
     // Infrastructure Modules
     Route::resource('servers', App\Http\Controllers\ServerController::class);
     Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
-    Route::resource('ssh-keys', App\Http\Controllers\SshKeyController::class);
 
     // Productivity Modules
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
