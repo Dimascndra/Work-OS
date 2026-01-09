@@ -39,6 +39,11 @@ class ContentSecurityPolicy
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+        // Force all cookies to be Secure, HttpOnly, and SameSite=Strict
+        foreach ($response->headers->getCookies() as $cookie) {
+            $response->headers->setCookie($cookie->withSecure(true)->withHttpOnly(true)->withSameSite('strict'));
+        }
+
         return $response;
     }
 }
