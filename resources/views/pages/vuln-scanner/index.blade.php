@@ -76,7 +76,8 @@
                     <span class="label label-inline label-light-warning font-weight-bold mr-2">60-74</span> Perlu
                     Perbaikan
                     <div class="separator separator-border-dashed my-2"></div>
-                    <span class="label label-inline label-light-danger font-weight-bold mr-2">60</span> Berisiko
+                    <span class="label label-inline label-light-danger font-weight-bold mr-2">
+                        < 60 </span> Berisiko
                 </div>
             </x-card>
         </div>
