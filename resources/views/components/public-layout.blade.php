@@ -50,8 +50,11 @@
                 </a>
                 <div>
                     @auth
-                        <a href="{{ route('dashboard') }}"
-                            class="btn btn-sm btn-light-primary font-weight-bold">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline"></form>
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Logout</button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-sm btn-light-primary font-weight-bold">Login</a>
                     @endauth
