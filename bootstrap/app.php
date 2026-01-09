@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
-            \App\Http\Middleware\SecurityHeaders::class,
+            \App\Http\Middleware\ContentSecurityPolicy::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

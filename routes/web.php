@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
     Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
     Route::get('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'index'])->name('vuln-scanner.index');
-    Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->name('vuln-scanner.scan');
+    Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->middleware('throttle:10,1')->name('vuln-scanner.scan');
 
     Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');
     Route::post('/productivity/start', [App\Http\Controllers\TimeEntryController::class, 'store'])->name('productivity.store');
