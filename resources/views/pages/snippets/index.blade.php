@@ -76,6 +76,20 @@
         .markdown-body table tr:nth-child(2n) {
             background-color: #f6f8fa;
         }
+
+        /* Cursor for clickable header */
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        /* Rotate chevron when expanded */
+        .card-header[aria-expanded="true"] .rotate-icon {
+            transform: rotate(180deg);
+        }
+
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
     </style>
 @endpush
 
@@ -89,7 +103,9 @@
 
         @forelse($snippets as $snippet)
             <div class="card card-custom gutter-b border">
-                <div class="card-header">
+                <!-- Header (Clickable Collapse Trigger) -->
+                <div class="card-header cursor-pointer" data-toggle="collapse"
+                    data-target="#collapse-{{ $snippet->id }}" aria-expanded="false">
                     <div class="card-title">
                         <span class="card-icon">
                             <i class="flaticon-code text-primary"></i>
@@ -101,36 +117,46 @@
                         </h3>
                     </div>
                     <div class="card-toolbar">
+                        <!-- Edit Button (Prevent collapse propagation) -->
                         <a href="{{ route('snippets.edit', $snippet) }}"
-                            class="btn btn-icon btn-light btn-hover-primary btn-sm" title="Edit snippet">
+                            class="btn btn-icon btn-light btn-hover-primary btn-sm mr-2" title="Edit snippet"
+                            onclick="event.stopPropagation();">
                             <i class="flaticon2-edit"></i>
                         </a>
+                        <!-- Collapse Indicator -->
+                        <span class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                            <i class="flaticon2-down rotate-icon"></i>
+                        </span>
                     </div>
                 </div>
-                <div class="card-body">
-                    @php
-                        $language = strtolower($snippet->language ?? 'text');
-                        $isMarkdown = in_array($language, ['markdown', 'md', 'text']);
-                    @endphp
 
-                    @if ($isMarkdown)
-                        <!-- Server-Side Markdown Rendering (Robust & No JS required) -->
-                        <div class="markdown-body">
-                            {!! \Illuminate\Support\Str::markdown($snippet->code_content) !!}
-                        </div>
-                    @else
-                        <div class="markdown-body">
-                            <pre><code class="language-{{ $language }}">{{ $snippet->code_content }}</code></pre>
-                        </div>
-                    @endif
+                <!-- Collapsible Body (Default: Hidden) -->
+                <div id="collapse-{{ $snippet->id }}" class="collapse">
+                    <div class="card-body">
+                        @php
+                            $language = strtolower($snippet->language ?? 'text');
+                            $isMarkdown = in_array($language, ['markdown', 'md', 'text']);
+                        @endphp
 
-                    @if ($snippet->tags && count($snippet->tags) > 0)
-                        <div class="mt-3">
-                            @foreach ($snippet->tags as $tag)
-                                <span class="label label-inline label-light-info mr-1">{{ $tag }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+                        @if ($isMarkdown)
+                            <!-- Server-Side Markdown Rendering -->
+                            <div class="markdown-body">
+                                {!! \Illuminate\Support\Str::markdown($snippet->code_content) !!}
+                            </div>
+                        @else
+                            <div class="markdown-body">
+                                <pre><code class="language-{{ $language }}">{{ $snippet->code_content }}</code></pre>
+                            </div>
+                        @endif
+
+                        @if ($snippet->tags && count($snippet->tags) > 0)
+                            <div class="mt-3">
+                                @foreach ($snippet->tags as $tag)
+                                    <span class="label label-inline label-light-info mr-1">{{ $tag }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         @empty
