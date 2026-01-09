@@ -20,7 +20,8 @@ class ContentSecurityPolicy
         $csp = [
             "default-src 'self'",
             "script-src 'self'",
-            "style-src 'self' 'unsafe-inline'",
+            "style-src 'self'",
+            "object-src 'none'",
             "img-src 'self' data: https:",
             "connect-src 'self'",
             "frame-ancestors 'self'",
