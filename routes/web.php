@@ -13,6 +13,9 @@ Route::get('/', function () {
 
 Route::get('/s/{code}', [App\Http\Controllers\ShortUrlController::class, 'redirect'])->name('short.redirect');
 
+Route::get('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'index'])->name('vuln-scanner.index');
+Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->middleware('throttle:10,1')->name('vuln-scanner.scan');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -48,8 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, 'check'])->name('dns-checker.check');
     Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
     Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
-    Route::get('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'index'])->name('vuln-scanner.index');
-    Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->middleware('throttle:10,1')->name('vuln-scanner.scan');
+
 
     Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');
     Route::post('/productivity/start', [App\Http\Controllers\TimeEntryController::class, 'store'])->name('productivity.store');

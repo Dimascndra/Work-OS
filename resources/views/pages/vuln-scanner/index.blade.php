@@ -1,4 +1,4 @@
-<x-metrolar-layout title="Web Vulnerability Scanner">
+<x-public-layout title="Web Vulnerability Scanner">
     <div class="row">
         <!-- Input Section -->
         <div class="col-lg-4">
@@ -23,31 +23,43 @@
                 <div class="table-responsive">
                     <table class="table table-borderless table-sm">
                         <tr>
-                            <td>SSL/TLS</td>
-                            <td class="text-right font-weight-bold">20 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Security Headers</td>
-                            <td class="text-right font-weight-bold">20 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Cookie & Session</td>
-                            <td class="text-right font-weight-bold">15 pts</td>
-                        </tr>
-                        <tr>
-                            <td>HTTPS Enforcement</td>
+                            <td>Web Server Security</td>
                             <td class="text-right font-weight-bold">10 pts</td>
                         </tr>
                         <tr>
-                            <td>File/Info Exposure</td>
-                            <td class="text-right font-weight-bold">15 pts</td>
-                        </tr>
-                        <tr>
-                            <td>CORS</td>
+                            <td>Web Software Security</td>
                             <td class="text-right font-weight-bold">10 pts</td>
                         </tr>
                         <tr>
-                            <td>Error Handling</td>
+                            <td>GDPR Compliance</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>PCI DSS Compliance</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>HTTP Headers</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>Content Security Policy</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>Cookies Security</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>External Content (CORS)</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>Data Scraping Protection</td>
+                            <td class="text-right font-weight-bold">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>DNSSEC Configuration</td>
                             <td class="text-right font-weight-bold">10 pts</td>
                         </tr>
                         <tr class="border-top">
@@ -215,4 +227,4 @@
             @endif
         </div>
     </div>
-</x-metrolar-layout>
+</x-public-layout>
