@@ -88,7 +88,7 @@
 
                 @include('layouts.partials._menu', [
                     'config' => config('menus.productivity'),
-                    'sectionTitle' => 'Productivity',
+                    'sectionTitle' => 'Tools',
                 ])
 
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">

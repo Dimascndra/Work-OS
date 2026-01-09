@@ -23,7 +23,16 @@ class TimeEntryController extends Controller
 
         $activeTimer = \App\Models\TimeEntry::where('user_id', auth()->id())->whereNull('end_time')->first();
 
-        return view('pages.productivity.index', compact('entries', 'totalHours', 'activeTimer', 'todayEntries'));
+        // Aggregated Stats
+        $stats = [
+            'tasks_count' => \App\Models\Task::count(),
+            'tasks_completed' => \App\Models\Task::where('status', 'completed')->count(), // Assuming status column exists
+            'snippets_count' => \App\Models\Snippet::count(),
+            'short_urls_count' => \App\Models\ShortUrl::count(),
+            'short_urls_clicks' => \App\Models\ShortUrl::sum('clicks'),
+        ];
+
+        return view('pages.productivity.index', compact('entries', 'totalHours', 'activeTimer', 'todayEntries', 'stats'));
     }
 
     public function store(Request $request)
