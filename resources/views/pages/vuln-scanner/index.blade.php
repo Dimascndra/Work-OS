@@ -77,7 +77,8 @@
                     Perbaikan
                     <div class="separator separator-border-dashed my-2"></div>
                     <span class="label label-inline label-light-danger font-weight-bold mr-2">
-                        <60< /span> Berisiko
+                        60 Berisiko
+                    </span>
                 </div>
             </x-card>
         </div>
