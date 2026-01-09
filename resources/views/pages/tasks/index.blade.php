@@ -62,9 +62,34 @@
                             </td>
                             <td class="text-right">
                                 <a href="{{ route('tasks.edit', $task) }}"
-                                    class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                    class="btn btn-icon btn-light btn-hover-primary btn-sm mr-2">
                                     <i class="flaticon2-edit"></i>
                                 </a>
+
+                                @if (isset($activeTimer) && $activeTimer->task_id == $task->id)
+                                    <form action="{{ route('productivity.stop', $activeTimer) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="btn btn-icon btn-light-danger btn-sm pulse pulse-danger"
+                                            title="Stop Timer">
+                                            <i class="flaticon2-time"></i>
+                                            <span class="pulse-ring"></span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('productivity.store') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                        <input type="hidden" name="description"
+                                            value="Working on {{ $task->title }}">
+                                        <button type="submit" class="btn btn-icon btn-light-success btn-sm"
+                                            title="Start Timer">
+                                            <i class="flaticon2-time"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

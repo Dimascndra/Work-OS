@@ -17,4 +17,9 @@ class Task extends Model
         // Assuming Project model exists or will exist.
         return $this->belongsTo(Project::class);
     }
+
+    public function timeEntries()
+    {
+        return $this->hasMany(TimeEntry::class);
+    }
 }

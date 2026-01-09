@@ -7,7 +7,7 @@
             @if (!empty($isNoAside) && $isNoAside === true)
                 <div class="header-logo">
                     <a href="/dashboard">
-                        <img alt="Logo" src="assets/media/logos/logo-dark.png">
+                        <img alt="Logo" src="{{ asset('assets/media/logos/logo-dark.png') }}">
                     </a>
                 </div>
             @endif
@@ -884,8 +884,8 @@
                 <!--begin::Toggle-->
                 <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px">
                     <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">
-                        <img class="h-20px w-20px rounded-sm" src="assets/media/svg/flags/226-united-states.svg"
-                            alt="" />
+                        <img class="h-20px w-20px rounded-sm"
+                            src="{{ asset('assets/media/svg/flags/226-united-states.svg') }}" alt="" />
                     </div>
                 </div>
                 <!--end::Toggle-->

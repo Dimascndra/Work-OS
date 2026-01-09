@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+class SslCheckerController extends Controller
+{
+    public function index()
+    {
+        return view('pages.ssl-checker.index');
+    }
+
+    public function check(Request $request)
+    {
+        $request->validate([
+            'domain' => 'required|string',
+        ]);
+
+        $domain = $request->input('domain');
+        // Remove protocol if present
+        $domain = preg_replace('#^https?://#', '', $domain);
+        // Remove trailing slash
+        $domain = rtrim($domain, '/');
+
+        $streamContext = stream_context_create([
+            'ssl' => [
+                'capture_peer_cert' => true,
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
+
+        try {
+            // Suppress warnings to handle errors manually (@)
+            $client = @stream_socket_client(
+                "ssl://{$domain}:443",
+                $errno,
+                $errstr,
+                10, // Timeout in seconds
+                STREAM_CLIENT_CONNECT,
+                $streamContext
+            );
+
+            if (!$client) {
+                $friendlyError = "Could not connect to {$domain}.";
+
+                // Map common errors to friendly messages
+                if (strpos($errstr, 'getaddrinfo') !== false || strpos($errstr, 'No such host') !== false) {
+                    $friendlyError = "Domain '{$domain}' not found. Please check the spelling.";
+                } elseif (strpos($errstr, 'timed out') !== false) {
+                    $friendlyError = "Connection to '{$domain}' timed out. The server might be down.";
+                } elseif (strpos($errstr, 'ssl') !== false) {
+                    $friendlyError = "SSL/TLS handshake failed for '{$domain}'. The site might not have SSL.";
+                } elseif ($errno == 0 && empty($errstr)) {
+                    $friendlyError = "Connection failed. Please check your internet connection or the domain name.";
+                }
+
+                return back()->with('error', $friendlyError)->withInput();
+            }
+
+            $context = stream_context_get_params($client);
+            $cert = openssl_x509_parse($context['options']['ssl']['peer_certificate']);
+
+            if (!$cert) {
+                return back()->with('error', "Could not parse certificate for {$domain}.")
+                    ->withInput();
+            }
+
+            $validFrom = Carbon::createFromTimestamp($cert['validFrom_time_t']);
+            $validTo = Carbon::createFromTimestamp($cert['validTo_time_t']);
+            $currentData = Carbon::now();
+            $daysRemaining = $currentData->diffInDays($validTo, false);
+
+            $status = 'valid';
+            if ($daysRemaining < 0) {
+                $status = 'expired';
+            } elseif ($daysRemaining < 30) {
+                $status = 'warning';
+            }
+
+            $certificateData = [
+                'domain' => $domain,
+                'issuer' => $cert['issuer']['CN'] ?? $cert['issuer']['O'] ?? 'Unknown',
+                'valid_from' => $validFrom->format('d M Y H:i:s'),
+                'valid_to' => $validTo->format('d M Y H:i:s'),
+                'days_remaining' => (int) $daysRemaining,
+                'status' => $status,
+                'details' => $cert
+            ];
+
+            return back()->with('result', $certificateData)->withInput();
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            if (strpos($msg, 'getaddrinfo') !== false) {
+                $msg = "Domain not found.";
+            }
+            return back()->with('error', "Unable to check {$domain}: " . $msg)->withInput();
+        }
+    }
+}

@@ -11,6 +11,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/s/{code}', [App\Http\Controllers\ShortUrlController::class, 'redirect'])->name('short.redirect');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,12 +35,25 @@ Route::middleware('auth')->group(function () {
     // Infrastructure Modules
     Route::resource('servers', App\Http\Controllers\ServerController::class);
     Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
-    Route::resource('ssh-keys', App\Http\Controllers\SshKeyController::class);
 
     // Productivity Modules
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
     Route::resource('snippets', App\Http\Controllers\SnippetController::class);
     Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
+    Route::resource('short-urls', App\Http\Controllers\ShortUrlController::class);
+    Route::get('/qr-generator', [App\Http\Controllers\QrCodeController::class, 'index'])->name('qr.index');
+    Route::get('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'index'])->name('ssl-checker.index');
+    Route::post('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'check'])->name('ssl-checker.check');
+    Route::get('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, 'index'])->name('dns-checker.index');
+    Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, 'check'])->name('dns-checker.check');
+    Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
+    Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
+    Route::get('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'index'])->name('vuln-scanner.index');
+    Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->middleware('throttle:10,1')->name('vuln-scanner.scan');
+
+    Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');
+    Route::post('/productivity/start', [App\Http\Controllers\TimeEntryController::class, 'store'])->name('productivity.store');
+    Route::patch('/productivity/{timeEntry}/stop', [App\Http\Controllers\TimeEntryController::class, 'update'])->name('productivity.stop');
 });
 
 require __DIR__ . '/auth.php';

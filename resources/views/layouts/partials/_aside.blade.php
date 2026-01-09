@@ -7,9 +7,9 @@
         <!--begin::Logo-->
         <a href="/dashboard" class="brand-logo">
             @if (!empty($isLight) && $isLight === true)
-                <img alt="Logo" src="assets/media/logos/logo-dark.png" />
+                <img alt="Logo" src="{{ asset('assets/media/logos/logo-dark.png') }}" />
             @else
-                <img alt="Logo" src="assets/media/logos/logo-light.png" />
+                <img alt="Logo" src="{{ asset('assets/media/logos/logo-light.png') }}" />
             @endif
         </a>
 
@@ -88,7 +88,7 @@
 
                 @include('layouts.partials._menu', [
                     'config' => config('menus.productivity'),
-                    'sectionTitle' => 'Productivity',
+                    'sectionTitle' => 'Tools',
                 ])
 
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">

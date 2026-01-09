@@ -9,8 +9,10 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::latest()->get(); // If projects exist, maybe with('project')
-        return view('pages.tasks.index', compact('tasks'));
+        $tasks = Task::latest()->get();
+        $activeTimer = \App\Models\TimeEntry::where('user_id', auth()->id())->whereNull('end_time')->first();
+
+        return view('pages.tasks.index', compact('tasks', 'activeTimer'));
     }
 
     public function create()

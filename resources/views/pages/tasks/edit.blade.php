@@ -84,4 +84,33 @@
             });
         </script>
     @endpush
+
+    <x-card title="Time Logs" class="mt-6">
+        <div class="table-responsive">
+            <table class="table table-head-custom table-vertical-center">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Duration</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($task->timeEntries as $entry)
+                        <tr>
+                            <td>{{ $entry->start_time->format('Y-m-d H:i') }}</td>
+                            <td>{{ $entry->user->name ?? 'Unknown' }}</td>
+                            <td>{{ $entry->duration_text }}</td>
+                            <td>{{ $entry->description ?: '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No time logs recorded for this task.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </x-card>
 </x-metrolar-layout>

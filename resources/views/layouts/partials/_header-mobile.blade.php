@@ -3,7 +3,7 @@
 
     <!--begin::Logo-->
     <a href="/dashboard">
-        <img alt="Logo" src="assets/media/logos/logo-light.png" />
+        <img alt="Logo" src="{{ asset('/assets/media/logos/logo-light.png') }}" />
     </a>
 
     <!--end::Logo-->
