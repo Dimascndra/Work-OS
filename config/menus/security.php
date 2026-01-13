@@ -23,13 +23,18 @@ return [
     ],
     [
         'title' => 'DNS Checker',
-        'icon' => 'Communication/Globe',
+        'icon' => 'Home/Globe',
         'route' => '/dns-checker',
     ],
     [
         'title' => 'SSL Expiry',
-        'icon' => 'Shopping/Lock',
+        'icon' => 'General/Lock',
         'route' => '/ssl-checker',
+    ],
+    [
+        'title' => 'DNSSEC Analyzer',
+        'icon' => 'General/Shield-check',
+        'route' => '/dnssec-analyzer',
     ],
     // [
     //     'title' => 'Activity Logs',

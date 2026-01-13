@@ -17,67 +17,82 @@
                         Scan Website <i class="flaticon-search ml-2"></i>
                     </button>
                 </form>
-            </x-card>
+                <div class="separator separator-border-dashed my-5"></div>
 
-            <x-card title="ℹ️ Scoring Guide" class="card-stretch gutter-b">
-                <div class="table-responsive">
-                    <table class="table table-borderless table-sm">
-                        <tr>
-                            <td>Web Server Security</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Web Software Security</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>GDPR Compliance</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>PCI DSS Compliance</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>HTTP Headers</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Content Security Policy</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Cookies Security</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>External Content (CORS)</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>Data Scraping Protection</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr>
-                            <td>DNSSEC Configuration</td>
-                            <td class="text-right font-weight-bold">10 pts</td>
-                        </tr>
-                        <tr class="border-top">
-                            <td><strong>Total</strong></td>
-                            <td class="text-right font-weight-bold"><strong>100 pts</strong></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="mt-3">
-                    <span class="label label-inline label-light-success font-weight-bold mr-2">90-100</span> Sangat Aman
-                    <div class="separator separator-border-dashed my-2"></div>
-                    <span class="label label-inline label-light-primary font-weight-bold mr-2">75-89</span> Aman
-                    <div class="separator separator-border-dashed my-2"></div>
-                    <span class="label label-inline label-light-warning font-weight-bold mr-2">60-74</span> Perlu
-                    Perbaikan
-                    <div class="separator separator-border-dashed my-2"></div>
-                    <span class="label label-inline label-light-danger font-weight-bold mr-2">
-                        < 60 </span> Berisiko
+                <div class="accordion accordion-light accordion-toggle-arrow" id="scoringAccordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <div class="card-title collapsed" data-toggle="collapse" data-target="#collapseScoring">
+                                <i class="flaticon-interface-10"></i> Scoring Guide
+                            </div>
+                        </div>
+                        <div id="collapseScoring" class="collapse" data-parent="#scoringAccordion">
+                            <div class="card-body pl-0 pr-0">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td>Web Server Security</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Web Software Security</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GDPR Compliance</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PCI DSS Compliance</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>HTTP Headers</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Content Security Policy</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cookies Security</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>External Content (CORS)</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Scraping Protection</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DNSSEC Configuration</td>
+                                        <td class="text-right font-weight-bold">10 pts</td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right font-weight-bold"><strong>100 pts</strong></td>
+                                    </tr>
+                                </table>
+                                <div class="mt-3">
+                                    <span
+                                        class="label label-inline label-light-success font-weight-bold mr-2">90-100</span>
+                                    Sangat Aman
+                                    <div class="separator separator-border-dashed my-2"></div>
+                                    <span
+                                        class="label label-inline label-light-primary font-weight-bold mr-2">75-89</span>
+                                    Aman
+                                    <div class="separator separator-border-dashed my-2"></div>
+                                    <span
+                                        class="label label-inline label-light-warning font-weight-bold mr-2">60-74</span>
+                                    Perlu Perbaikan
+                                    <div class="separator separator-border-dashed my-2"></div>
+                                    <span class="label label-inline label-light-danger font-weight-bold mr-2">
+                                        < 60 </span> Berisiko
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </x-card>
         </div>

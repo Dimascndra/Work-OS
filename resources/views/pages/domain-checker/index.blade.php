@@ -1,4 +1,4 @@
-<x-metrolar-layout title="Domain Checker">
+<x-public-layout title="Domain Checker">
     <div class="row">
         <!-- Input Section -->
         <div class="col-lg-5">
@@ -16,16 +16,12 @@
                         Search Domain <i class="flaticon2-search-1 ml-2"></i>
                     </button>
                 </form>
-            </x-card>
-
-            <x-card title="ℹ️ Information" class="card-stretch gutter-b">
-                <p class="text-muted">
-                    This tool checks if a domain is registered by querying DNS records (NS/A). It also attempts to fetch
-                    WHOIS information from standard servers.
-                </p>
-                <p class="text-muted mb-0">
-                    <strong>Note:</strong> Some TLDs may restrict WHOIS access or require CAPTCHA.
-                </p>
+                <div class="separator separator-border-dashed my-5"></div>
+                <div class="text-muted">
+                    <p class="mb-2">This tool checks if a domain is registered by querying DNS records (NS/A). It also
+                        attempts to fetch WHOIS information.</p>
+                    <p class="mb-0"><strong>Note:</strong> Some TLDs may restrict WHOIS access or require CAPTCHA.</p>
+                </div>
             </x-card>
         </div>
 
@@ -84,4 +80,4 @@
             @endif
         </div>
     </div>
-</x-metrolar-layout>
+</x-public-layout>

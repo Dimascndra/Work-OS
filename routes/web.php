@@ -28,6 +28,12 @@ Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, '
 Route::get('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'index'])->name('ssl-checker.index');
 Route::post('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'check'])->middleware('throttle:10,1')->name('ssl-checker.check');
 
+Route::get('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'index'])->name('dnssec-analyzer.index');
+Route::post('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'analyze'])->middleware('throttle:10,1')->name('dnssec-analyzer.analyze');
+
+Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
+Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->middleware('throttle:10,1')->name('domain-checker.check');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -57,8 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
     Route::resource('short-urls', App\Http\Controllers\ShortUrlController::class);
     Route::get('/qr-generator', [App\Http\Controllers\QrCodeController::class, 'index'])->name('qr.index');
-    Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
-    Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
+    // Route::get('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'index'])->name('domain-checker.index');
+    // Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
 
 
     Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');

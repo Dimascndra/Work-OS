@@ -19,10 +19,13 @@ class DnsCheckerController extends Controller
             'type' => 'required|in:A,AAAA,MX,CNAME,NS,TXT,PTR,SOA',
         ]);
 
-        $domain = $request->input('domain');
-        // Remove protocols
-        $domain = preg_replace('#^https?://#', '', $domain);
-        $domain = rtrim($domain, '/');
+        $input = $request->input('domain');
+        // Parse host from URL if user entered full URL
+        if (!preg_match('#^https?://#', $input)) {
+            $input = 'http://' . $input;
+        }
+        $parsed = parse_url($input);
+        $domain = $parsed['host'] ?? $request->input('domain');
 
         $type = $request->input('type');
 
@@ -256,9 +259,16 @@ class DnsCheckerController extends Controller
         }
     }
 
+
+
+    // ...
+
     private function checkDoH($url, $domain, $type, $headers = [])
     {
         try {
+            // Add DNSSEC OK (do=true) parameter
+            $url .= (strpos($url, '?') === false ? '?' : '&') . 'do=true';
+
             $response = Http::timeout(3)->withHeaders($headers)->get($url, [
                 'name' => $domain,
                 'type' => $type
@@ -266,19 +276,26 @@ class DnsCheckerController extends Controller
 
             if ($response->successful()) {
                 $json = $response->json();
+                $dnssec = false;
+
+                // Check Authenticated Data (AD) flag
+                if (isset($json['AD']) && $json['AD'] === true) {
+                    $dnssec = true;
+                }
+
                 if (isset($json['Answer'])) {
                     $data = array_map(function ($a) {
                         return $a['data'];
                     }, $json['Answer']);
                     sort($data);
-                    return ['status' => 'success', 'data' => $data];
+                    return ['status' => 'success', 'data' => $data, 'dnssec' => $dnssec];
                 }
                 // No answer section means empty or failure for that type
-                return ['status' => 'empty', 'data' => []];
+                return ['status' => 'empty', 'data' => [], 'dnssec' => $dnssec];
             }
-            return ['status' => 'error', 'message' => 'HTTP ' . $response->status(), 'data' => []];
+            return ['status' => 'error', 'message' => 'HTTP ' . $response->status(), 'data' => [], 'dnssec' => false];
         } catch (\Exception $e) {
-            return ['status' => 'error', 'message' => 'Connection Failed', 'data' => []];
+            return ['status' => 'error', 'message' => 'Connection Failed', 'data' => [], 'dnssec' => false];
         }
     }
 

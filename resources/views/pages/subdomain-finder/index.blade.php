@@ -17,14 +17,7 @@
                         Find Subdomains <i class="flaticon-search ml-2"></i>
                     </button>
                 </form>
-            </x-card>
-
-            <x-card title="ℹ️ About Tool" class="card-stretch gutter-b">
-                <p class="text-muted font-weight-bold">
-                    This tool uses <a href="https://crt.sh" target="_blank" class="text-primary">crt.sh</a> Certificate
-                    Transparency logs to find subdomains associated with a target domain.
-                </p>
-                <div class="separator separator-border-dashed my-4"></div>
+                <div class="separator separator-border-dashed my-5"></div>
                 <div class="d-flex align-items-center">
                     <div class="symbol symbol-40 symbol-light-primary mr-3">
                         <span class="symbol-label font-size-h4 font-weight-bold">
@@ -32,9 +25,8 @@
                         </span>
                     </div>
                     <div>
-                        <a href="#" class="font-weight-bold text-dark-75 text-hover-primary">Passive
-                            Reconnaissance</a>
-                        <div class="text-muted">Safe & Non-intrusive</div>
+                        <div class="text-dark-75 font-weight-bold">Passive Reconnaissance</div>
+                        <div class="text-muted font-size-sm">Uses crt.sh logs. Safe & Non-intrusive.</div>
                     </div>
                 </div>
             </x-card>

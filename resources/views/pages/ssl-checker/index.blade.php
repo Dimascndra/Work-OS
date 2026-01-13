@@ -29,15 +29,11 @@
                         Check Expiry <i class="flaticon2-search-1 ml-2"></i>
                     </button>
                 </form>
-            </x-card>
-
-            <!-- Tips Section -->
-            <div class="alert alert-custom alert-light-primary fade show mb-5" role="alert">
-                <div class="alert-icon"><i class="flaticon-info"></i></div>
-                <div class="alert-text font-weight-bold">
-                    This tool retrieves the SSL certificate from port 443 to verify its expiration date and issuer.
+                <div class="text-muted mt-5">
+                    <i class="flaticon-info text-primary mr-1"></i> We verify certificate expiration date and issuer
+                    from port 443.
                 </div>
-            </div>
+            </x-card>
         </div>
 
         <!-- Result Section -->

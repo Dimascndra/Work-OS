@@ -16,16 +16,16 @@ return [
         'icon' => 'Communication/Incoming-box', // Or similar
         'route' => '/qr-generator',
     ],
-    [
-        'title' => 'SSL Expiry Checker',
-        'icon' => 'General/Shield-check',
-        'route' => '/ssl-checker',
-    ],
-    [
-        'title' => 'DNS Propagation',
-        'icon' => 'Home/Globe',
-        'route' => '/dns-checker',
-    ],
+    // [
+    //     'title' => 'SSL Expiry Checker',
+    //     'icon' => 'General/Shield-check',
+    //     'route' => '/ssl-checker',
+    // ],
+    // [
+    //     'title' => 'DNS Propagation',
+    //     'icon' => 'Home/Globe',
+    //     'route' => '/dns-checker',
+    // ],
     [
         'title' => 'Domain Whois',
         'icon' => 'General/Search',
