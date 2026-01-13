@@ -44,16 +44,31 @@
         <!-- Simple Header -->
         <div class="bg-white shadow-sm py-4">
             <div class="container d-flex align-items-center justify-content-between">
-                <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary">
+                <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary mr-5">
                     <i class="flaticon2-shield text-primary mr-2"></i> Work-OS <span
                         class="text-muted font-weight-normal">Security Tools</span>
                 </a>
+                <div class="d-flex align-items-center flex-grow-1">
+                    <a href="{{ route('vuln-scanner.index') }}"
+                        class="btn btn-sm font-weight-bold mr-2 {{ request()->routeIs('vuln-scanner.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
+                        <i
+                            class="flaticon-safe-shield-protection {{ request()->routeIs('vuln-scanner.*') ? 'text-primary' : '' }}"></i>
+                        Vuln Scanner
+                    </a>
+                    <a href="{{ route('subdomain-finder.index') }}"
+                        class="btn btn-sm font-weight-bold {{ request()->routeIs('subdomain-finder.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
+                        <i
+                            class="flaticon-search {{ request()->routeIs('subdomain-finder.*') ? 'text-primary' : '' }}"></i>
+                        Subdomain Finder
+                    </a>
+                </div>
                 <div>
                     @auth
-                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
+                        <a href="{{ route('dashboard') }}"
+                            class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline"></form>
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Logout</button>
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Logout</button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-sm btn-light-primary font-weight-bold">Login</a>

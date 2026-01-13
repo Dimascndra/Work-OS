@@ -16,6 +16,9 @@ Route::get('/s/{code}', [App\Http\Controllers\ShortUrlController::class, 'redire
 Route::get('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'index'])->name('vuln-scanner.index');
 Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerController::class, 'scan'])->middleware('throttle:10,1')->name('vuln-scanner.scan');
 
+Route::get('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'index'])->name('subdomain-finder.index');
+Route::post('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'scan'])->middleware('throttle:10,1')->name('subdomain-finder.scan');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

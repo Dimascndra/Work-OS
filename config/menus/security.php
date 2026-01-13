@@ -16,6 +16,11 @@ return [
         'icon' => 'General/Shield-protected',
         'route' => '/vuln-scanner',
     ],
+    [
+        'title' => 'Subdomain Finder',
+        'icon' => 'General/Search',
+        'route' => '/subdomain-finder',
+    ],
     // [
     //     'title' => 'Activity Logs',
     //     'icon' => 'Communication/Clipboard-list',
