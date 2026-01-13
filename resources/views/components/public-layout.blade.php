@@ -130,11 +130,29 @@
                                     </div>
                                     <div class="navi-item mb-2">
                                         <a href="{{ route('domain-checker.index') }}"
-                                            class="navi-link py-4 {{ request()->routeIs('domain-checker.*') ? 'active' : '' }}">
-                                            <span class="navi-icon mr-2">
-                                                <i class="flaticon-search"></i>
-                                            </span>
-                                            <span class="navi-text font-size-lg">Whois Lookup</span>
+                                            class="list-group-item list-group-item-action {{ request()->routeIs('domain-checker.*') ? 'active' : '' }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="symbol symbol-30 mr-2">
+                                                    <span class="symbol-label bg-transparent">
+                                                        <i
+                                                            class="flaticon-search {{ request()->routeIs('domain-checker.*') ? 'text-white' : 'text-dark-50' }}"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="font-weight-bold">Domain Whois</span>
+                                            </div>
+                                        </a>
+
+                                        <a href="{{ route('web-analyzer.index') }}"
+                                            class="list-group-item list-group-item-action {{ request()->routeIs('web-analyzer.*') ? 'active' : '' }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="symbol symbol-30 mr-2">
+                                                    <span class="symbol-label bg-transparent">
+                                                        <i
+                                                            class="flaticon2-browser-2 {{ request()->routeIs('web-analyzer.*') ? 'text-white' : 'text-dark-50' }}"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="font-weight-bold">Web Analyzer</span>
+                                            </div>
                                         </a>
                                     </div>
                                 </div>

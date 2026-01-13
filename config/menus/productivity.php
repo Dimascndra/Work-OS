@@ -31,4 +31,9 @@ return [
         'icon' => 'General/Search',
         'route' => '/domain-checker',
     ],
+    [
+        'title' => 'Web Analyzer',
+        'icon' => 'Design/Interselect',
+        'route' => '/web-analyzer',
+    ],
 ];
