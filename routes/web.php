@@ -19,6 +19,9 @@ Route::post('/vuln-scanner', [App\Http\Controllers\VulnerabilityScannerControlle
 Route::get('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'index'])->name('subdomain-finder.index');
 Route::post('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'scan'])->middleware('throttle:10,1')->name('subdomain-finder.scan');
 
+Route::get('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'index'])->name('subdomain-finder.index');
+Route::post('/subdomain-finder', [App\Http\Controllers\SubdomainFinderController::class, 'scan'])->middleware('throttle:10,1')->name('subdomain-finder.scan');
+
 Route::get('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, 'index'])->name('dns-checker.index');
 Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, 'check'])->middleware('throttle:10,1')->name('dns-checker.check');
 
