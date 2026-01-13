@@ -1,3 +1,4 @@
+@props(['title'])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -56,10 +57,20 @@
                         Vuln Scanner
                     </a>
                     <a href="{{ route('subdomain-finder.index') }}"
-                        class="btn btn-sm font-weight-bold {{ request()->routeIs('subdomain-finder.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
+                        class="btn btn-sm font-weight-bold mr-2 {{ request()->routeIs('subdomain-finder.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
                         <i
                             class="flaticon-search {{ request()->routeIs('subdomain-finder.*') ? 'text-primary' : '' }}"></i>
                         Subdomain Finder
+                    </a>
+                    <a href="{{ route('dns-checker.index') }}"
+                        class="btn btn-sm font-weight-bold {{ request()->routeIs('dns-checker.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
+                        <i class="flaticon2-world {{ request()->routeIs('dns-checker.*') ? 'text-primary' : '' }}"></i>
+                        DNS Checker
+                    </a>
+                    <a href="{{ route('ssl-checker.index') }}"
+                        class="btn btn-sm font-weight-bold {{ request()->routeIs('ssl-checker.*') ? 'btn-light-primary' : 'btn-text-dark-50 btn-hover-text-primary' }}">
+                        <i class="flaticon-lock {{ request()->routeIs('ssl-checker.*') ? 'text-primary' : '' }}"></i>
+                        SSL Checker
                     </a>
                 </div>
                 <div>

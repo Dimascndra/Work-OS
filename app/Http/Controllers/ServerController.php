@@ -22,7 +22,7 @@ class ServerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'ip_address' => 'required|ip',
+            'ip_address' => 'required|string', // Changed from 'ip' to 'string' to allow domains
             'port' => 'required|integer',
             'username' => 'required|string',
             'password' => 'nullable|string',
@@ -51,7 +51,7 @@ class ServerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'ip_address' => 'required|ip',
+            'ip_address' => 'required|string', // Changed from 'ip' to 'string' to allow domains
             'port' => 'required|integer',
             'username' => 'required|string',
             'password' => 'nullable|string',

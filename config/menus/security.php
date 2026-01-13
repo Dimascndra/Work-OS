@@ -21,6 +21,16 @@ return [
         'icon' => 'General/Search',
         'route' => '/subdomain-finder',
     ],
+    [
+        'title' => 'DNS Checker',
+        'icon' => 'Communication/Globe',
+        'route' => '/dns-checker',
+    ],
+    [
+        'title' => 'SSL Expiry',
+        'icon' => 'Shopping/Lock',
+        'route' => '/ssl-checker',
+    ],
     // [
     //     'title' => 'Activity Logs',
     //     'icon' => 'Communication/Clipboard-list',
