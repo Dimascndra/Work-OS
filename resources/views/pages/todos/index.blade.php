@@ -48,7 +48,7 @@
 
         <!-- Notepad Column -->
         <div class="col-lg-4">
-            <div class="card card-custom gutter-b h-100">
+            <div class="card card-custom gutter-b h-100" id="kt_notepad_card">
                 <div class="card-header border-0 py-5">
                     <h3 class="card-title align-items-start flex-column">
                         <span class="card-label font-weight-bolder text-dark">Notepad</span>
@@ -369,14 +369,25 @@
                 let timeoutId;
 
                 const _loadContent = () => {
+                    KTApp.block('#kt_notepad_card', {
+                        overlayColor: '#000000',
+                        state: 'primary',
+                        message: 'Loading...'
+                    });
+
                     fetch("{{ route('todos.scratchpad.show') }}", {
                             headers: headers
                         })
                         .then(res => res.json())
                         .then(res => {
+                            KTApp.unblock('#kt_notepad_card');
                             if (res.success && res.data) {
                                 document.getElementById('notepad_content').value = res.data.content || '';
                             }
+                        })
+                        .catch(err => {
+                            KTApp.unblock('#kt_notepad_card');
+                            console.error(err);
                         });
                 };
 
