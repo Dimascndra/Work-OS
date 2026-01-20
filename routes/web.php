@@ -37,9 +37,9 @@ Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::cl
 Route::get('/web-analyzer', [App\Http\Controllers\WebAnalyzerController::class, 'index'])->name('web-analyzer.index');
 Route::post('/web-analyzer', [App\Http\Controllers\WebAnalyzerController::class, 'analyze'])->middleware('throttle:10,1')->name('web-analyzer.analyze');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
