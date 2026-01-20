@@ -28,6 +28,15 @@ Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, '
 Route::get('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'index'])->name('ssl-checker.index');
 Route::post('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'check'])->middleware('throttle:10,1')->name('ssl-checker.check');
 
+// Todo List Routes
+Route::prefix('todos')->name('todos.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\TodoController::class, 'index'])->name('index');
+    Route::get('/list', [\App\Http\Controllers\TodoController::class, 'getTodos'])->name('list');
+    Route::post('/', [\App\Http\Controllers\TodoController::class, 'store'])->name('store');
+    Route::put('/{todo}', [\App\Http\Controllers\TodoController::class, 'update'])->name('update');
+    Route::delete('/{todo}', [\App\Http\Controllers\TodoController::class, 'destroy'])->name('destroy');
+});
+
 Route::get('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'index'])->name('dnssec-analyzer.index');
 Route::post('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'analyze'])->middleware('throttle:10,1')->name('dnssec-analyzer.analyze');
 
