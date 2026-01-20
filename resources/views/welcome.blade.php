@@ -13,6 +13,31 @@
 
     <!-- Tools Grid -->
     <div class="row">
+        <!-- Web Analyzer -->
+        <div class="col-12">
+            <div class="card card-custom card-stretch wave wave-animate-slow">
+                <div class="card-body pt-8">
+                    <div class="d-flex align-items-center mb-5">
+                        <span class="symbol symbol-60 symbol-light-primary mr-5">
+                            <span class="symbol-label">
+                                <i class="flaticon2-browser-2 text-primary font-size-h1"></i>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column">
+                            <a href="{{ route('web-analyzer.index') }}"
+                                class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
+                                Web Analyzer
+                            </a>
+                            <span class="text-muted font-weight-bold">Tech Stack</span>
+                        </div>
+                    </div>
+                    <p class="text-dark-75 font-weight-nomal mb-5">
+                        Identify technologies framework, and server used by websites.
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <!-- Vuln Scanner -->
         <div class="col-xl-4 col-md-6 mb-6">
             <div class="card card-custom card-stretch wave wave-animate-slow">
@@ -158,31 +183,6 @@
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
                         Retrieve registration and ownership details for any domain.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Web Analyzer -->
-        <div class="col-xl-4 col-md-6 mb-6">
-            <div class="card card-custom card-stretch wave wave-animate-slow">
-                <div class="card-body pt-8">
-                    <div class="d-flex align-items-center mb-5">
-                        <span class="symbol symbol-60 symbol-light-primary mr-5">
-                            <span class="symbol-label">
-                                <i class="flaticon2-browser-2 text-primary font-size-h1"></i>
-                            </span>
-                        </span>
-                        <div class="d-flex flex-column">
-                            <a href="{{ route('web-analyzer.index') }}"
-                                class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                Web Analyzer
-                            </a>
-                            <span class="text-muted font-weight-bold">Tech Stack</span>
-                        </div>
-                    </div>
-                    <p class="text-dark-75 font-weight-nomal mb-5">
-                        Identify technologies framework, and server used by websites.
                     </p>
                 </div>
             </div>
