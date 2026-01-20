@@ -48,17 +48,15 @@
 
         <!-- Notepad Column -->
         <div class="col-lg-4">
-            <div class="card card-custom gutter-b h-100" id="kt_notepad_card">
-                <div class="card-header border-0 py-5">
-                    <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label font-weight-bolder text-dark">Notepad</span>
-                        <span class="text-muted mt-3 font-weight-bold font-size-sm" id="notepad_status">Saved</span>
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <textarea class="form-control form-control-solid" id="notepad_content" rows="15"
-                        placeholder="Type your notes here... (Auto-saved)" style="resize: none;"></textarea>
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="card-title font-weight-bolder text-dark mb-0">My Notes</h3>
+                <button type="button" class="btn btn-sm btn-primary font-weight-bold" onclick="NotepadApp.addNote()">
+                    <i class="flaticon2-plus"></i> Add Note
+                </button>
+            </div>
+
+            <div id="notepad_container">
+                <!-- Notes will be loaded here -->
             </div>
         </div>
     </div>
@@ -366,65 +364,192 @@
             }();
 
             const NotepadApp = function() {
-                let timeoutId;
+                const colors = ['white', 'warning', 'success', 'danger', 'info', 'primary'];
+                const colorClasses = {
+                    'white': 'card-custom', // default white
+                    'warning': 'bg-light-warning',
+                    'success': 'bg-light-success',
+                    'danger': 'bg-light-danger',
+                    'info': 'bg-light-info',
+                    'primary': 'bg-light-primary'
+                };
 
-                const _loadContent = () => {
-                    KTApp.block('#kt_notepad_card', {
+                let debounceTimers = {};
+
+                const _loadNotes = () => {
+                    KTApp.block('#notepad_container', {
                         overlayColor: '#000000',
                         state: 'primary',
                         message: 'Loading...'
                     });
 
-                    fetch("{{ route('todos.scratchpad.show') }}", {
+                    fetch("{{ route('todos.scratchpad.index') }}", {
                             headers: headers
                         })
                         .then(res => res.json())
                         .then(res => {
-                            KTApp.unblock('#kt_notepad_card');
-                            if (res.success && res.data) {
-                                document.getElementById('notepad_content').value = res.data.content || '';
+                            KTApp.unblock('#notepad_container');
+                            if (res.success) {
+                                _renderNotes(res.data);
                             }
                         })
                         .catch(err => {
-                            KTApp.unblock('#kt_notepad_card');
+                            KTApp.unblock('#notepad_container');
                             console.error(err);
                         });
                 };
 
-                const _saveContent = () => {
-                    const content = document.getElementById('notepad_content').value;
-                    const status = document.getElementById('notepad_status');
+                const _renderNotes = (notes) => {
+                    const container = document.getElementById('notepad_container');
+                    container.innerHTML = '';
 
-                    status.innerHTML = 'Saving...';
-                    status.classList.add('text-warning');
-                    status.classList.remove('text-muted');
+                    if (notes.length === 0) {
+                        container.innerHTML =
+                            '<div class="text-center text-muted mt-5">No notes yet. Click "Add Note" to create one.</div>';
+                        return;
+                    }
 
-                    fetch("{{ route('todos.scratchpad.store') }}", {
-                            method: 'POST',
-                            headers: headers,
-                            body: JSON.stringify({
-                                content: content
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(res => {
-                            if (res.success) {
-                                status.innerHTML = 'Saved';
-                                status.classList.remove('text-warning');
-                                status.classList.add('text-muted');
-                            }
+                    notes.forEach((note, index) => {
+                        const bgClass = colorClasses[note.color] || 'card-custom';
+                        const isFirst = index === 0;
+                        const isLast = index === notes.length - 1;
+
+                        let colorOptions = '';
+                        colors.forEach(c => {
+                            colorOptions +=
+                                `<a class="dropdown-item ${c === note.color ? 'active' : ''}" href="javascript:;" onclick="NotepadApp.updateColor(${note.id}, '${c}')"><span class="label label-dot label-${c} mr-2"></span> ${c.charAt(0).toUpperCase() + c.slice(1)}</a>`;
                         });
+
+                        const html = `
+                        <div class="card ${bgClass} gutter-b mb-4" id="note_${note.id}">
+                            <div class="card-header border-0 min-h-50px px-4 pt-4">
+                                <div class="card-title w-100 mr-2">
+                                     <input type="text" class="form-control form-control-transparent h-auto p-0 font-weight-bolder text-dark"
+                                        value="${note.title}" placeholder="Title..."
+                                        onchange="NotepadApp.updateTitle(${note.id}, this.value)">
+                                </div>
+                                <div class="card-toolbar">
+                                    <div class="dropdown dropdown-inline mr-2">
+                                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="flaticon2-gear"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            ${colorOptions}
+                                        </div>
+                                    </div>
+                                    ${!isFirst ? `<button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.moveNote(${note.id}, -1)"><i class="flaticon2-up"></i></button>` : ''}
+                                    ${!isLast ? `<button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.moveNote(${note.id}, 1)"><i class="flaticon2-down"></i></button>` : ''}
+                                    <button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.deleteNote(${note.id})"><i class="flaticon2-trash text-danger"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0 px-4 pb-4">
+                                <textarea class="form-control form-control-solid bg-transparent" rows="5"
+                                    placeholder="Type note..." style="resize: none;"
+                                    oninput="NotepadApp.updateContent(${note.id}, this.value)">${note.content || ''}</textarea>
+                                <div class="text-right mt-1"><small class="text-muted" id="status_${note.id}"></small></div>
+                            </div>
+                        </div>
+                       `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    });
                 };
 
                 return {
                     init: function() {
-                        _loadContent();
-
-                        document.getElementById('notepad_content').addEventListener('input', function() {
-                            document.getElementById('notepad_status').innerHTML = 'Typing...';
-                            clearTimeout(timeoutId);
-                            timeoutId = setTimeout(_saveContent, 1000); // Debounce 1s
+                        _loadNotes();
+                    },
+                    addNote: function() {
+                        fetch("{{ route('todos.scratchpad.store') }}", {
+                                method: 'POST',
+                                headers: headers,
+                                body: JSON.stringify({
+                                    title: 'Untitled Note',
+                                    color: 'white'
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.success) _loadNotes();
+                            });
+                    },
+                    updateContent: function(id, content) {
+                        document.getElementById(`status_${id}`).innerHTML = 'Saving...';
+                        clearTimeout(debounceTimers[id]);
+                        debounceTimers[id] = setTimeout(() => {
+                            this.saveNote(id, {
+                                content: content
+                            });
+                        }, 1000);
+                    },
+                    updateTitle: function(id, title) {
+                        this.saveNote(id, {
+                            title: title
                         });
+                    },
+                    updateColor: function(id, color) {
+                        this.saveNote(id, {
+                            color: color
+                        }).then(() => _loadNotes());
+                    },
+                    saveNote: function(id, data) {
+                        return fetch("{{ route('todos.scratchpad.update', ':id') }}".replace(':id', id), {
+                                method: 'PUT',
+                                headers: headers,
+                                body: JSON.stringify(data)
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.success) {
+                                    const statusEl = document.getElementById(`status_${id}`);
+                                    if (statusEl) statusEl.innerHTML = 'Saved';
+                                }
+                            });
+                    },
+                    deleteNote: function(id) {
+                        Swal.fire({
+                            title: "Delete Note?",
+                            text: "This cannot be undone",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes, delete it!"
+                        }).then((result) => {
+                            if (result.value) {
+                                fetch("{{ route('todos.scratchpad.destroy', ':id') }}".replace(':id', id), {
+                                        method: 'DELETE',
+                                        headers: headers
+                                    })
+                                    .then(res => res.json())
+                                    .then(res => {
+                                        if (res.success) _loadNotes();
+                                    });
+                            }
+                        });
+                    },
+                    moveNote: function(id, direction) {
+                        // Direction: -1 (up), 1 (down)
+                        // Simple logic: Load all notes, swap order locally, then send full order to server
+                        const container = document.getElementById('notepad_container');
+                        let ids = Array.from(container.children).map(el => parseInt(el.id.replace('note_', '')));
+                        const currentIndex = ids.indexOf(id);
+                        if (currentIndex === -1) return;
+
+                        const newIndex = currentIndex + direction;
+                        if (newIndex < 0 || newIndex >= ids.length) return;
+
+                        // Swap
+                        [ids[currentIndex], ids[newIndex]] = [ids[newIndex], ids[currentIndex]];
+
+                        fetch("{{ route('todos.scratchpad.reorder') }}", {
+                                method: 'PUT',
+                                headers: headers,
+                                body: JSON.stringify({
+                                    order: ids
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.success) _loadNotes();
+                            });
                     }
                 }
             }();

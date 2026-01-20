@@ -55,8 +55,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{todo}', [App\Http\Controllers\TodoController::class, 'destroy'])->name('destroy');
 
         // Scratchpad
-        Route::get('scratchpad', [App\Http\Controllers\ScratchpadController::class, 'show'])->name('scratchpad.show');
+        Route::get('scratchpad', [App\Http\Controllers\ScratchpadController::class, 'index'])->name('scratchpad.index');
         Route::post('scratchpad', [App\Http\Controllers\ScratchpadController::class, 'store'])->name('scratchpad.store');
+        Route::put('scratchpad/reorder', [App\Http\Controllers\ScratchpadController::class, 'reorder'])->name('scratchpad.reorder');
+        Route::put('scratchpad/{scratchpad}', [App\Http\Controllers\ScratchpadController::class, 'update'])->name('scratchpad.update');
+        Route::delete('scratchpad/{scratchpad}', [App\Http\Controllers\ScratchpadController::class, 'destroy'])->name('scratchpad.destroy');
     });
 
     // User Management Modules
