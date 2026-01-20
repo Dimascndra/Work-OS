@@ -28,15 +28,6 @@ Route::post('/dns-checker', [App\Http\Controllers\DnsCheckerController::class, '
 Route::get('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'index'])->name('ssl-checker.index');
 Route::post('/ssl-checker', [App\Http\Controllers\SslCheckerController::class, 'check'])->middleware('throttle:10,1')->name('ssl-checker.check');
 
-// Todo List Routes
-Route::prefix('todos')->name('todos.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\TodoController::class, 'index'])->name('index');
-    Route::get('/list', [\App\Http\Controllers\TodoController::class, 'getTodos'])->name('list');
-    Route::post('/', [\App\Http\Controllers\TodoController::class, 'store'])->name('store');
-    Route::put('/{todo}', [\App\Http\Controllers\TodoController::class, 'update'])->name('update');
-    Route::delete('/{todo}', [\App\Http\Controllers\TodoController::class, 'destroy'])->name('destroy');
-});
-
 Route::get('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'index'])->name('dnssec-analyzer.index');
 Route::post('/dnssec-analyzer', [App\Http\Controllers\DnsSecAnalyzerController::class, 'analyze'])->middleware('throttle:10,1')->name('dnssec-analyzer.analyze');
 
@@ -55,8 +46,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Security Modules
-    // Route::resource('users', App\Http\Controllers\UserController::class);
+    // Todo List Routes
+    Route::prefix('todos')->name('todos.')->group(function () {
+        Route::get('/', [App\Http\Controllers\TodoController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\TodoController::class, 'getTodos'])->name('list');
+        Route::post('/', [App\Http\Controllers\TodoController::class, 'store'])->name('store');
+        Route::put('/{todo}', [App\Http\Controllers\TodoController::class, 'update'])->name('update');
+        Route::delete('/{todo}', [App\Http\Controllers\TodoController::class, 'destroy'])->name('destroy');
+
+        // Scratchpad
+        Route::get('scratchpad', [App\Http\Controllers\ScratchpadController::class, 'show'])->name('scratchpad.show');
+        Route::post('scratchpad', [App\Http\Controllers\ScratchpadController::class, 'store'])->name('scratchpad.store');
+    });
+
+    // User Management Modules
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
         Route::get('/list', [App\Http\Controllers\UserController::class, 'getUsers'])->name('list');
@@ -64,7 +67,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
     });
-    Route::resource('users', App\Http\Controllers\UserController::class); // We can leave this or update it, I updated it previously via tool but file content might be stale in context.
 
     // Explicit Credentials Routes
     Route::prefix('credentials')->name('credentials.')->group(function () {
@@ -75,16 +77,9 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{credential}', [App\Http\Controllers\CredentialController::class, 'destroy'])->name('destroy');
     });
 
-    // Route::get('/credentials', [App\Http\Controllers\CredentialController::class, 'index'])->name('credentials.index');
-    // Route::get('/credentials/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('credentials.create');
-    // Route::post('/credentials', [App\Http\Controllers\CredentialController::class, 'store'])->name('credentials.store');
-    // Route::get('/credentials/{credential}/edit', [App\Http\Controllers\CredentialController::class, 'edit'])->name('credentials.edit');
-    // Route::put('/credentials/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('credentials.update');
-
     Route::get('/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
 
     // Infrastructure Modules
-    // Route::resource('servers', App\Http\Controllers\ServerController::class);
     Route::prefix('servers')->name('servers.')->group(function () {
         Route::get('/', [App\Http\Controllers\ServerController::class, 'index'])->name('index');
         Route::get('/list', [App\Http\Controllers\ServerController::class, 'getServers'])->name('list');
@@ -93,7 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{server}', [App\Http\Controllers\ServerController::class, 'destroy'])->name('destroy');
     });
 
-    // Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
+    // Domain Monitors Module
     Route::prefix('domain-monitors')->name('domain-monitors.')->group(function () {
         Route::get('/', [App\Http\Controllers\DomainMonitorController::class, 'index'])->name('index');
         Route::get('/list', [App\Http\Controllers\DomainMonitorController::class, 'getMonitors'])->name('list');
@@ -119,8 +114,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
     Route::resource('short-urls', App\Http\Controllers\ShortUrlController::class);
     Route::get('/qr-generator', [App\Http\Controllers\QrCodeController::class, 'index'])->name('qr.index');
-    // Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::class, 'check'])->name('domain-checker.check');
-
 
     Route::get('/productivity', [App\Http\Controllers\TimeEntryController::class, 'index'])->name('productivity.index');
     Route::post('/productivity/start', [App\Http\Controllers\TimeEntryController::class, 'store'])->name('productivity.store');
