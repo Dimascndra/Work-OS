@@ -267,9 +267,25 @@
                         _loadMonitors();
                         document.getElementById('kt_form_monitor').addEventListener('submit', _handleSubmit);
 
+                        // Initialize Select2
+                        $('#monitor_server_id').select2({
+                            placeholder: "Select Server",
+                            allowClear: true,
+                            width: '100%'
+                        });
+
+                        $('#monitor_status').select2({
+                            placeholder: "Select Status",
+                            minimumResultsForSearch: Infinity, // hide search for fixed options
+                            width: '100%'
+                        });
+
                         $('#kt_modal_monitor').on('hidden.bs.modal', function() {
                             document.getElementById('kt_form_monitor').reset();
                             document.getElementById('monitor_id').value = '';
+                            // Reset Select2
+                            $('#monitor_server_id').val('').trigger('change');
+                            $('#monitor_status').val('healthy').trigger('change');
                         });
                     },
                     editItem: function(id) {
@@ -278,8 +294,10 @@
 
                         document.getElementById('monitor_id').value = item.id;
                         document.getElementById('monitor_domain_url').value = item.domain_url;
-                        document.getElementById('monitor_status').value = item.status;
-                        document.getElementById('monitor_server_id').value = item.server_id || '';
+
+                        // Update Select2
+                        $('#monitor_server_id').val(item.server_id).trigger('change');
+                        $('#monitor_status').val(item.status).trigger('change');
 
                         $('#kt_modal_monitor').modal('show');
                     },
