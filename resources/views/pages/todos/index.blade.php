@@ -1,4 +1,4 @@
-<x-metrolar-layout>
+<x-metrolar-layout fluid="true">
     <x-slot name="title">To Do List</x-slot>
     <x-slot name="subheader">
         <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -48,15 +48,23 @@
 
         <!-- Notepad Column -->
         <div class="col-lg-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="card-title font-weight-bolder text-dark mb-0">My Notes</h3>
-                <button type="button" class="btn btn-sm btn-primary font-weight-bold" onclick="NotepadApp.addNote()">
-                    <i class="flaticon2-plus"></i> Add Note
-                </button>
-            </div>
-
-            <div id="notepad_container">
-                <!-- Notes will be loaded here -->
+            <div class="card card-custom gutter-b h-100">
+                <div class="card-header border-0 py-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label font-weight-bolder text-dark">My Notes</span>
+                    </h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-sm btn-primary font-weight-bold"
+                            onclick="NotepadApp.addNote()">
+                            <i class="flaticon2-plus"></i> Add Note
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body scroll scroll-pull" data-scroll="true" style="height: 600px; overflow-y: auto;">
+                    <div id="notepad_container">
+                        <!-- Notes will be loaded here -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -421,32 +429,32 @@
                         });
 
                         const html = `
-                        <div class="card ${bgClass} gutter-b mb-4" id="note_${note.id}">
-                            <div class="card-header border-0 min-h-50px px-4 pt-4">
-                                <div class="card-title w-100 mr-2">
-                                     <input type="text" class="form-control form-control-transparent h-auto p-0 font-weight-bolder text-dark"
-                                        value="${note.title}" placeholder="Title..."
+                        <div class="card ${bgClass} gutter-b mb-4 box-shadow-sm" id="note_${note.id}">
+                            <div class="card-header border-0 min-h-auto pt-4 pb-0 px-4 bg-transparent d-flex align-items-center">
+                                <div class="card-title min-w-0 flex-grow-1 mr-2 mb-0">
+                                     <input type="text" class="form-control form-control-transparent border-0 p-0 h-auto font-weight-bolder text-dark font-size-h6 bg-transparent"
+                                        value="${note.title}" placeholder="Title..." style="box-shadow:none;"
                                         onchange="NotepadApp.updateTitle(${note.id}, this.value)">
                                 </div>
-                                <div class="card-toolbar">
-                                    <div class="dropdown dropdown-inline mr-2">
-                                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="flaticon2-gear"></i>
+                                <div class="card-toolbar mb-0 flex-shrink-0">
+                                    <div class="dropdown dropdown-inline mr-1">
+                                        <button type="button" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Change Color">
+                                            <i class="flaticon2-gear text-muted"></i>
                                         </button>
-                                        <div class="dropdown-menu dropdown-menu-right">
+                                        <div class="dropdown-menu dropdown-menu-right p-0 m-0">
                                             ${colorOptions}
                                         </div>
                                     </div>
-                                    ${!isFirst ? `<button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.moveNote(${note.id}, -1)"><i class="flaticon2-up"></i></button>` : ''}
-                                    ${!isLast ? `<button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.moveNote(${note.id}, 1)"><i class="flaticon2-down"></i></button>` : ''}
-                                    <button type="button" class="btn btn-clean btn-sm btn-icon" onclick="NotepadApp.deleteNote(${note.id})"><i class="flaticon2-trash text-danger"></i></button>
+                                    ${!isFirst ? `<button type="button" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon mr-1" onclick="NotepadApp.moveNote(${note.id}, -1)" title="Move Up"><i class="flaticon2-up text-muted"></i></button>` : ''}
+                                    ${!isLast ? `<button type="button" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon mr-1" onclick="NotepadApp.moveNote(${note.id}, 1)" title="Move Down"><i class="flaticon2-down text-muted"></i></button>` : ''}
+                                    <button type="button" class="btn btn-clean btn-hover-light-danger btn-sm btn-icon" onclick="NotepadApp.deleteNote(${note.id})" title="Delete"><i class="flaticon2-trash text-muted"></i></button>
                                 </div>
                             </div>
-                            <div class="card-body pt-0 px-4 pb-4">
-                                <textarea class="form-control form-control-solid bg-transparent" rows="5"
-                                    placeholder="Type note..." style="resize: none;"
+                            <div class="card-body p-4 w-100">
+                                <textarea class="form-control form-control-transparent border-0 bg-transparent p-0 text-dark-75 font-size-base" rows="5"
+                                    placeholder="Type note..." style="resize: none; box-shadow:none;"
                                     oninput="NotepadApp.updateContent(${note.id}, this.value)">${note.content || ''}</textarea>
-                                <div class="text-right mt-1"><small class="text-muted" id="status_${note.id}"></small></div>
+                                <div class="text-right mt-1"><small class="text-muted font-size-xs" id="status_${note.id}"></small></div>
                             </div>
                         </div>
                        `;

@@ -1,5 +1,9 @@
+@props(['fluid' => false])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@php
+    $containerClass = $fluid ? 'container-fluid' : 'container';
+@endphp
 
 <head>
     <meta charset="utf-8" />
@@ -49,7 +53,7 @@
                     @endif
 
                     <div class="d-flex flex-column-fluid">
-                        <div class="container">
+                        <div class="{{ $containerClass }}">
                             {{ $slot }}
                         </div>
                     </div>
