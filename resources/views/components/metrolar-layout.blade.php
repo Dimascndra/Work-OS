@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>{{ $title ?? config('app.name') }} | Metronic Work OS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />

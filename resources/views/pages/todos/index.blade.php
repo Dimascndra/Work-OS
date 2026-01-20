@@ -223,21 +223,43 @@
                             headers: headers,
                             body: JSON.stringify(data)
                         })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const isJson = response.headers.get('content-type')?.includes('application/json');
+                            const data = isJson ? await response.json() : null;
+
+                            if (!response.ok) {
+                                // Handle Validation Errors (422)
+                                if (response.status === 422 && data && data.errors) {
+                                    let errorMsg = '';
+                                    Object.values(data.errors).forEach(err => {
+                                        errorMsg += err.join('<br>') + '<br>';
+                                    });
+                                    toastr.error(errorMsg, "Validation Error");
+                                }
+                                // Handle other errors
+                                else {
+                                    const msg = (data && data.message) || response.statusText;
+                                    toastr.error(msg, "Error " + response.status);
+                                }
+                                return {
+                                    success: false
+                                }; // Stop promise chain
+                            }
+
+                            return data;
+                        })
                         .then(res => {
                             KTUtil.btnRelease(btn);
-                            if (res.success) {
+                            if (res && res.success) {
                                 $('#kt_modal_todo').modal('hide');
                                 toastr.success(res.message);
                                 _loadTodos();
-                            } else {
-                                toastr.error("Operation failed");
                             }
                         })
                         .catch(err => {
                             KTUtil.btnRelease(btn);
                             console.error(err);
-                            toastr.error("An error occurred");
+                            toastr.error("An unexpected error occurred. Check console for details.");
                         });
                 };
 
