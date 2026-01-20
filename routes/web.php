@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 }); */
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 Route::get('/s/{code}', [App\Http\Controllers\ShortUrlController::class, 'redirect'])->name('short.redirect');

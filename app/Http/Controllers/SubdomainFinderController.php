@@ -28,35 +28,64 @@ class SubdomainFinderController extends Controller
         }
 
         try {
-            // Query crt.sh
-            $response = Http::timeout(30)->get("https://crt.sh/?q=%25.{$domain}&output=json");
-
-            if ($response->failed()) {
-                return back()->with('error', 'Failed to connect to subdomain source.')->withInput();
-            }
-
-            $data = $response->json();
-
-            if (!is_array($data)) {
-                // Sometimes crt.sh might not return JSON or returns null if no results
-                $data = [];
-            }
-
             $subdomains = [];
-            foreach ($data as $entry) {
-                if (isset($entry['name_value'])) {
-                    // entry['name_value'] can contain multiple domains separated by newlines
-                    $names = explode("\n", $entry['name_value']);
-                    foreach ($names as $name) {
-                        $name = trim($name);
-                        // Filter out wildcards and the domain itself if you want strictly subdomains,
-                        // but usually users want to see everything associated.
-                        // Let's keep unique valid subdomains.
-                        if ($name && strpos($name, '*') === false) {
-                            $subdomains[] = $name;
+            $errorMsg = null;
+            $fetched = false;
+
+            // 1. Try crt.sh
+            try {
+                $response = Http::timeout(10)->get("https://crt.sh/?q=%25.{$domain}&output=json");
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (is_array($data)) {
+                        foreach ($data as $entry) {
+                            if (isset($entry['name_value'])) {
+                                $names = explode("\n", $entry['name_value']);
+                                foreach ($names as $name) {
+                                    $name = trim($name);
+                                    if ($name && strpos($name, '*') === false) {
+                                        $subdomains[] = $name;
+                                    }
+                                }
+                            }
                         }
+                        $fetched = true;
                     }
                 }
+            } catch (\Exception $e) {
+                // crt.sh failed, try fallback
+                $errorMsg = "crt.sh failed: " . $e->getMessage();
+            }
+
+            // 2. Fallback to HackerTarget if crt.sh failed
+            if (!$fetched) {
+                try {
+                    $response = Http::timeout(10)->get("https://api.hackertarget.com/hostsearch/?q={$domain}");
+                    if ($response->successful()) {
+                        $lines = explode("\n", $response->body());
+                        foreach ($lines as $line) {
+                            $parts = explode(',', $line);
+                            if (isset($parts[0])) {
+                                $name = trim($parts[0]);
+                                if ($name && $name !== $domain) { // Basic basic validation
+                                    $subdomains[] = $name;
+                                }
+                            }
+                        }
+                        $fetched = true;
+                    }
+                } catch (\Exception $e2) {
+                    $errorMsg .= " | HackerTarget failed: " . $e2->getMessage();
+                }
+            }
+
+            if (!$fetched && empty($subdomains)) {
+                $friendlyError = "Failed to retrieve subdomains from all sources. Service might be busy. Please try again later.";
+                if ($request->ajax()) {
+                    $html = view('pages.subdomain-finder._result', ['error' => $friendlyError])->render();
+                    return response()->json(['success' => false, 'html' => $html]);
+                }
+                return back()->with('error', $friendlyError)->withInput();
             }
 
             // Unique and Sort
@@ -125,12 +154,25 @@ class SubdomainFinderController extends Controller
             }
             unset($res); // break reference
 
-            return back()->with('result', [
+            if ($request->ajax()) {
+                $html = view('pages.subdomain-finder._result', ['res' => [
+                    'domain' => $domain,
+                    'subdomains' => $resultsWithIp,
+                    'count' => count($resultsWithIp)
+                ]])->render();
+                return response()->json(['success' => true, 'html' => $html]);
+            }
+
+            return back()->with('subdomain_result', [
                 'domain' => $domain,
                 'subdomains' => $resultsWithIp,
                 'count' => count($resultsWithIp)
             ])->withInput();
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                $html = view('pages.subdomain-finder._result', ['error' => "An error occurred: " . $e->getMessage()])->render();
+                return response()->json(['success' => false, 'html' => $html]);
+            }
             return back()->with('error', "An error occurred: " . $e->getMessage())->withInput();
         }
     }

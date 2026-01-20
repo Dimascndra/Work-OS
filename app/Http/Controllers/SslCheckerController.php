@@ -57,6 +57,11 @@ class SslCheckerController extends Controller
                     $friendlyError = "Connection failed. Please check your internet connection or the domain name.";
                 }
 
+                if ($request->ajax()) {
+                    $html = view('pages.ssl-checker._result', ['error' => $friendlyError])->render();
+                    return response()->json(['success' => false, 'html' => $html]);
+                }
+
                 return back()->with('error', $friendlyError)->withInput();
             }
 
@@ -64,6 +69,10 @@ class SslCheckerController extends Controller
             $cert = openssl_x509_parse($context['options']['ssl']['peer_certificate']);
 
             if (!$cert) {
+                if ($request->ajax()) {
+                    $html = view('pages.ssl-checker._result', ['error' => "Could not parse certificate for {$domain}."])->render();
+                    return response()->json(['success' => false, 'html' => $html]);
+                }
                 return back()->with('error', "Could not parse certificate for {$domain}.")
                     ->withInput();
             }
@@ -90,12 +99,23 @@ class SslCheckerController extends Controller
                 'details' => $cert
             ];
 
-            return back()->with('result', $certificateData)->withInput();
+            if ($request->ajax()) {
+                $html = view('pages.ssl-checker._result', ['res' => $certificateData])->render();
+                return response()->json(['success' => true, 'html' => $html]);
+            }
+
+            return back()->with('ssl_result', $certificateData)->withInput();
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             if (strpos($msg, 'getaddrinfo') !== false) {
                 $msg = "Domain not found.";
             }
+
+            if ($request->ajax()) {
+                $html = view('pages.ssl-checker._result', ['error' => "Unable to check {$domain}: " . $msg])->render();
+                return response()->json(['success' => false, 'html' => $html]);
+            }
+
             return back()->with('error', "Unable to check {$domain}: " . $msg)->withInput();
         }
     }

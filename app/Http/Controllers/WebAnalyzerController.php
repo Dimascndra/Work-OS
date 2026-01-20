@@ -196,10 +196,20 @@ class WebAnalyzerController extends Controller
             $score = max(0, $score);
             $result['overall_score'] = $score;
             $result['url'] = $url;
+            $result['url'] = $url;
             $result['timestamp'] = date('Y-m-d H:i:s');
 
-            return back()->with('result', $result)->withInput();
+            if ($request->ajax()) {
+                $html = view('pages.web-analyzer._result', ['res' => $result])->render();
+                return response()->json(['success' => true, 'html' => $html]);
+            }
+
+            return back()->with('web_analyzer_result', $result)->withInput();
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                $html = view('pages.web-analyzer._result', ['error' => 'Could not analyze URL. ' . $e->getMessage()])->render();
+                return response()->json(['success' => false, 'html' => $html]);
+            }
             return back()->with('error', 'Could not analyze URL. ' . $e->getMessage())->withInput();
         }
     }

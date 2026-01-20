@@ -31,11 +31,18 @@ class DomainCheckerController extends Controller
         // 2. Whois Lookup
         $whoisText = $this->queryWhois($domain);
 
-        return back()->with('result', [
+        $res = [
             'domain' => $domain,
             'is_registered' => $isRegistered,
             'whois' => $whoisText
-        ])->withInput();
+        ];
+
+        if ($request->ajax()) {
+            $html = view('pages.domain-checker._result', ['res' => $res])->render();
+            return response()->json(['success' => true, 'html' => $html]);
+        }
+
+        return back()->with('domain_result', $res)->withInput();
     }
 
     private function queryWhois($domain)

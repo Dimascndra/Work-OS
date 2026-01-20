@@ -196,11 +196,15 @@ class DnsCheckerController extends Controller
             }
 
             $checkResult = $this->resolveDns($domain, $type, $key);
-
             $results[$key] = array_merge($info, $checkResult);
         }
 
-        return back()->with('results', $results)->withInput();
+        if ($request->ajax()) {
+            $html = view('pages.dns-checker._result', ['res' => $results])->render();
+            return response()->json(['success' => true, 'html' => $html, 'results' => $results]);
+        }
+
+        return back()->with('dns_results', $results)->withInput();
     }
 
     private function resolveDns($domain, $type, $provider)

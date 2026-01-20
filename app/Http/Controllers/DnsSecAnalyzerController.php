@@ -45,7 +45,12 @@ class DnsSecAnalyzerController extends Controller
         $domainAnalysis = $this->analyzeAuthoritative($domainAnalysis, $domain);
         $analysis[] = $domainAnalysis;
 
-        return back()->with('result', ['domain' => $domain, 'analysis' => $analysis])->withInput();
+        if ($request->ajax()) {
+            $html = view('pages.dnssec-analyzer._result', ['res' => ['domain' => $domain, 'analysis' => $analysis]])->render();
+            return response()->json(['success' => true, 'html' => $html]);
+        }
+
+        return back()->with('dnssec_result', ['domain' => $domain, 'analysis' => $analysis])->withInput();
     }
 
     private function analyzeZone($zone, $label, $targetDomain)

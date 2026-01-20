@@ -38,7 +38,6 @@
             position: -webkit-sticky;
             position: sticky;
             top: 100px;
-            z-index: 90;
         }
     </style>
 
@@ -50,7 +49,7 @@
 
     <div class="d-flex flex-column flex-root public-wrapper">
         <!-- Header -->
-        <div class="bg-white shadow-sm py-4 mb-5" style="z-index: 100;">
+        <div class="bg-white shadow-sm py-4 mb-5 position-fixed w-100">
             <div class="container-fluid px-5 d-flex align-items-center justify-content-between">
                 <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary mr-5">
                     <i class="flaticon2-shield text-primary mr-2"></i> Work-OS <span
@@ -72,7 +71,7 @@
             </div>
         </div>
 
-        <div class="public-content">
+        <div class="public-content" style="margin-top: 60px;">
             <div class="container-fluid px-5">
                 <div class="row">
                     <!-- Sidebar Navigation -->
@@ -130,7 +129,7 @@
                                     </div>
                                     <div class="navi-item mb-2">
                                         <a href="{{ route('domain-checker.index') }}"
-                                            class="list-group-item list-group-item-action {{ request()->routeIs('domain-checker.*') ? 'active' : '' }}">
+                                            class="navi-link py-4 {{ request()->routeIs('domain-checker.*') ? 'active' : '' }}">
                                             <div class="d-flex align-items-center">
                                                 <span class="symbol symbol-30 mr-2">
                                                     <span class="symbol-label bg-transparent">
@@ -143,7 +142,7 @@
                                         </a>
 
                                         <a href="{{ route('web-analyzer.index') }}"
-                                            class="list-group-item list-group-item-action {{ request()->routeIs('web-analyzer.*') ? 'active' : '' }}">
+                                            class="navi-link py-4 {{ request()->routeIs('web-analyzer.*') ? 'active' : '' }}">
                                             <div class="d-flex align-items-center">
                                                 <span class="symbol symbol-30 mr-2">
                                                     <span class="symbol-label bg-transparent">
