@@ -2,58 +2,71 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDomainMonitorRequest;
+use App\Http\Requests\UpdateDomainMonitorRequest;
 use App\Models\DomainMonitor;
+use App\Services\DomainMonitorService;
 use Illuminate\Http\Request;
 
 class DomainMonitorController extends Controller
 {
+    protected $domainMonitorService;
+
+    public function __construct(DomainMonitorService $domainMonitorService)
+    {
+        $this->domainMonitorService = $domainMonitorService;
+    }
+
     public function index()
     {
-        $monitors = DomainMonitor::with('server')->get();
-        return view('pages.domain-monitors.index', compact('monitors'));
-    }
-
-    public function create()
-    {
+        // Need to pass servers for modal dropdown if we want to render it in blade initially,
+        // OR fetch via AJAX. Let's pass it for simplicity in current view,
+        // but for AJAX modal we usually fetch options or embed json.
         $servers = \App\Models\Server::all();
-        return view('pages.domain-monitors.create', compact('servers'));
+        return view('pages.domain-monitors.index', compact('servers'));
     }
 
-    public function store(Request $request)
+    public function getMonitors()
     {
-        $validated = $request->validate([
-            'server_id' => 'nullable|exists:servers,id',
-            'domain_url' => 'required|url',
-            'status' => 'required|in:healthy,down,warning',
+        $monitors = $this->domainMonitorService->getAll();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Monitors retrieved successfully',
+            'data' => $monitors
         ]);
-
-        DomainMonitor::create($validated);
-
-        return redirect()->route('domain-monitors.index')->with('success', 'Monitor created successfully');
     }
 
-    public function edit(DomainMonitor $domainMonitor)
+    public function store(StoreDomainMonitorRequest $request)
     {
-        $servers = \App\Models\Server::all();
-        return view('pages.domain-monitors.edit', compact('domainMonitor', 'servers'));
+        $monitor = $this->domainMonitorService->create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Monitor created successfully',
+            'data' => $monitor
+        ], 201);
     }
 
-    public function update(Request $request, DomainMonitor $domainMonitor)
+    public function update(UpdateDomainMonitorRequest $request, DomainMonitor $domainMonitor)
     {
-        $validated = $request->validate([
-            'server_id' => 'nullable|exists:servers,id',
-            'domain_url' => 'required|url',
-            'status' => 'required|in:healthy,down,warning',
+        $monitor = $this->domainMonitorService->update($domainMonitor, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Monitor updated successfully',
+            'data' => $monitor
         ]);
-
-        $domainMonitor->update($validated);
-
-        return redirect()->route('domain-monitors.index')->with('success', 'Monitor updated successfully');
     }
 
     public function destroy(DomainMonitor $domainMonitor)
     {
-        $domainMonitor->delete();
-        return redirect()->route('domain-monitors.index')->with('success', 'Monitor deleted successfully');
+        $this->domainMonitorService->delete($domainMonitor);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Monitor deleted successfully',
+            'data' => null
+        ]);
     }
 }

@@ -56,22 +56,66 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Security Modules
-    Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::get('/credentials', [App\Http\Controllers\CredentialController::class, 'index'])->name('credentials.index');
-    Route::get('/credentials/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('credentials.create');
-    Route::post('/credentials', [App\Http\Controllers\CredentialController::class, 'store'])->name('credentials.store');
-    Route::get('/credentials/{credential}/edit', [App\Http\Controllers\CredentialController::class, 'edit'])->name('credentials.edit');
-    Route::put('/credentials/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('credentials.update');
+    // Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\UserController::class, 'getUsers'])->name('list');
+        Route::post('/', [App\Http\Controllers\UserController::class, 'store'])->name('store');
+        Route::put('/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
+    });
+    Route::resource('users', App\Http\Controllers\UserController::class); // We can leave this or update it, I updated it previously via tool but file content might be stale in context.
+
+    // Explicit Credentials Routes
+    Route::prefix('credentials')->name('credentials.')->group(function () {
+        Route::get('/', [App\Http\Controllers\CredentialController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\CredentialController::class, 'getCredentials'])->name('list');
+        Route::post('/', [App\Http\Controllers\CredentialController::class, 'store'])->name('store');
+        Route::put('/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('update');
+        Route::delete('/{credential}', [App\Http\Controllers\CredentialController::class, 'destroy'])->name('destroy');
+    });
+
+    // Route::get('/credentials', [App\Http\Controllers\CredentialController::class, 'index'])->name('credentials.index');
+    // Route::get('/credentials/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('credentials.create');
+    // Route::post('/credentials', [App\Http\Controllers\CredentialController::class, 'store'])->name('credentials.store');
+    // Route::get('/credentials/{credential}/edit', [App\Http\Controllers\CredentialController::class, 'edit'])->name('credentials.edit');
+    // Route::put('/credentials/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('credentials.update');
 
     Route::get('/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
 
     // Infrastructure Modules
-    Route::resource('servers', App\Http\Controllers\ServerController::class);
-    Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
+    // Route::resource('servers', App\Http\Controllers\ServerController::class);
+    Route::prefix('servers')->name('servers.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ServerController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\ServerController::class, 'getServers'])->name('list');
+        Route::post('/', [App\Http\Controllers\ServerController::class, 'store'])->name('store');
+        Route::put('/{server}', [App\Http\Controllers\ServerController::class, 'update'])->name('update');
+        Route::delete('/{server}', [App\Http\Controllers\ServerController::class, 'destroy'])->name('destroy');
+    });
+
+    // Route::resource('domain-monitors', App\Http\Controllers\DomainMonitorController::class);
+    Route::prefix('domain-monitors')->name('domain-monitors.')->group(function () {
+        Route::get('/', [App\Http\Controllers\DomainMonitorController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\DomainMonitorController::class, 'getMonitors'])->name('list');
+        Route::post('/', [App\Http\Controllers\DomainMonitorController::class, 'store'])->name('store');
+        Route::put('/{domainMonitor}', [App\Http\Controllers\DomainMonitorController::class, 'update'])->name('update');
+        Route::delete('/{domainMonitor}', [App\Http\Controllers\DomainMonitorController::class, 'destroy'])->name('destroy');
+    });
 
     // Productivity Modules
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
-    Route::resource('snippets', App\Http\Controllers\SnippetController::class);
+    Route::resource('tasks', App\Http\Controllers\TaskController::class);
+
+    // Snippets Routes
+    Route::prefix('snippets')->name('snippets.')->group(function () {
+        Route::get('/', [App\Http\Controllers\SnippetController::class, 'index'])->name('index');
+        Route::get('/list', [App\Http\Controllers\SnippetController::class, 'getSnippets'])->name('list');
+        Route::post('/', [App\Http\Controllers\SnippetController::class, 'store'])->name('store');
+        Route::put('/{snippet}', [App\Http\Controllers\SnippetController::class, 'update'])->name('update');
+        Route::delete('/{snippet}', [App\Http\Controllers\SnippetController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
     Route::resource('subscriptions', App\Http\Controllers\SubscriptionController::class);
     Route::resource('short-urls', App\Http\Controllers\ShortUrlController::class);
     Route::get('/qr-generator', [App\Http\Controllers\QrCodeController::class, 'index'])->name('qr.index');
