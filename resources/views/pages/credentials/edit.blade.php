@@ -20,6 +20,9 @@
                         <label for="category">Category <span class="text-danger">*</span></label>
                         <select class="form-control form-control-solid select2 @error('category') is-invalid @enderror"
                             id="category" name="category">
+                            <option value="personal" {{ $credential->category == 'personal' ? 'selected' : '' }}>
+                                Personal
+                            </option>
                             <option value="dev" {{ $credential->category == 'dev' ? 'selected' : '' }}>Development
                             </option>
                             <option value="social" {{ $credential->category == 'social' ? 'selected' : '' }}>Social
@@ -42,7 +45,8 @@
                         required />
                 </div>
                 <div class="col-md-6">
-                    <x-input label="URL" name="url" placeholder="https://example.com" :value="$credential->url" />
+                    <x-input label="URL (Optional)" name="url" placeholder="https://example.com"
+                        :value="$credential->url" />
                 </div>
             </div>
 

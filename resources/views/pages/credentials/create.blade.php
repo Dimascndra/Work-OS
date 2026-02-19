@@ -18,6 +18,7 @@
                         <label for="category">Category <span class="text-danger">*</span></label>
                         <select class="form-control form-control-solid select2 @error('category') is-invalid @enderror"
                             id="category" name="category">
+                            <option value="personal">Personal</option>
                             <option value="dev">Development</option>
                             <option value="social">Social Media</option>
                             <option value="banking">Banking</option>
@@ -35,7 +36,7 @@
                     <x-input label="Username / Email" name="username" placeholder="Enter username" required />
                 </div>
                 <div class="col-md-6">
-                    <x-input label="URL" name="url" placeholder="https://example.com" />
+                    <x-input label="URL (Optional)" name="url" placeholder="https://example.com" />
                 </div>
             </div>
 

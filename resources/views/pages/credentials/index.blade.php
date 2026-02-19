@@ -13,17 +13,42 @@
                         <th style="min-width: 150px">Service</th>
                         <th style="min-width: 150px">Username</th>
                         <th style="min-width: 150px">Category</th>
+                        <th style="min-width: 200px">Notes</th>
                         <th class="text-right" style="min-width: 150px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($credentials as $credential)
+                        @php
+                            $categoryColors = [
+                                'personal' => 'primary',
+                                'banking' => 'danger',
+                                'social' => 'info',
+                                'dev' => 'dark',
+                                'other' => 'secondary',
+                            ];
+                            $color = $categoryColors[$credential->category] ?? 'primary';
+                        @endphp
                         <tr>
                             <td class="pl-0">
-                                <a href="#"
-                                    class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ $credential->service_name }}</a>
-                                <span
-                                    class="text-muted font-weight-bold text-muted d-block">{{ $credential->url }}</span>
+                                <div class="d-flex align-items-center">
+                                    @if ($credential->url)
+                                        <img src="https://www.google.com/s2/favicons?domain={{ parse_url($credential->url, PHP_URL_HOST) ?? $credential->url }}&sz=32"
+                                            class="mr-2 rounded-circle" style="width: 24px; height: 24px;"
+                                            alt="" />
+                                    @else
+                                        <span class="symbol symbol-25 symbol-light-primary mr-2">
+                                            <span
+                                                class="symbol-label font-size-xs">{{ substr($credential->service_name, 0, 1) }}</span>
+                                        </span>
+                                    @endif
+                                    <div>
+                                        <a href="#"
+                                            class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ $credential->service_name }}</a>
+                                        <span
+                                            class="text-muted font-weight-bold text-muted d-block font-size-sm">{{ $credential->url }}</span>
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <span
@@ -31,7 +56,11 @@
                             </td>
                             <td>
                                 <span
-                                    class="label label-lg label-light-primary label-inline">{{ $credential->category }}</span>
+                                    class="label label-lg label-light-{{ $color }} label-inline font-weight-bold">{{ ucfirst($credential->category) }}</span>
+                            </td>
+                            <td>
+                                <span class="text-muted font-weight-bold" data-toggle="tooltip"
+                                    title="{{ $credential->notes }}">{{ Str::limit($credential->notes, 30) }}</span>
                             </td>
                             <td class="text-right pr-0">
                                 <a href="javascript:;" class="btn btn-icon btn-light btn-hover-primary btn-sm btn-copy"
@@ -87,20 +116,33 @@
     @push('scripts')
         <script>
             // Initialize Clipboard.js
-            new ClipboardJS('.btn-copy').on('success', function(e) {
-                var btn = $(e.trigger);
-                var originalTitle = btn.attr('title');
+            $(function() {
+                // Initialize Clipboard.js
+                var clipboard = new ClipboardJS('.btn-copy');
 
-                // Show tooltip or feedback
-                // Simple feedback by changing icon or using Toastr if available
-                // Assuming standard Metronic usage with KTUtil or just manual tooltip update
+                clipboard.on('success', function(e) {
+                    var btn = $(e.trigger);
+                    var originalTitle = btn.attr('title');
 
-                // Using Toastr for feedback if available in plugins
-                if (typeof toastr !== 'undefined') {
-                    toastr.success('Password copied to clipboard!');
-                }
+                    // Visual feedback
+                    btn.addClass('btn-success').removeClass('btn-light');
+                    btn.find('i, svg').addClass('text-white'); // Ensure icon is visible if needed
 
-                e.clearSelection();
+                    // Show tooltip or feedback
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success('Password copied to clipboard!');
+                    } else {
+                        // Fallback if toastr is not available
+                        // You might want to use a tooltip update here instead
+                    }
+
+                    // Reset button after 2 seconds
+                    setTimeout(function() {
+                        btn.removeClass('btn-success').addClass('btn-light');
+                        btn.find('i, svg').removeClass('text-white');
+                        e.clearSelection();
+                    }, 2000);
+                });
             });
         </script>
     @endpush
