@@ -1,9 +1,10 @@
+@props(['title'])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ $title ?? 'Work OS' }} | Vulnerability Scanner</title>
+    <title>{{ $title ?? 'Work OS' }} | Security Tools</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -15,7 +16,7 @@
     <link href="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 
-    <!-- Public Theme Styles (Optional override) -->
+    <!-- Public Theme Styles -->
     <style>
         body {
             background-color: #f3f6f9;
@@ -29,8 +30,14 @@
 
         .public-content {
             flex: 1;
-            padding-top: 100px;
+            padding-top: 30px;
             padding-bottom: 50px;
+        }
+
+        .sticky-sidebar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 100px;
         }
     </style>
 
@@ -41,17 +48,19 @@
     class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
 
     <div class="d-flex flex-column flex-root public-wrapper">
-        <!-- Simple Header -->
-        <div class="bg-white shadow-sm py-4">
-            <div class="container d-flex align-items-center justify-content-between">
-                <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary">
+        <!-- Header -->
+        <div class="bg-white shadow-sm py-4 mb-5 position-fixed w-100">
+            <div class="container-fluid px-5 d-flex align-items-center justify-content-between">
+                <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary mr-5">
                     <i class="flaticon2-shield text-primary mr-2"></i> Work-OS <span
                         class="text-muted font-weight-normal">Security Tools</span>
                 </a>
+
                 <div>
                     @auth
-                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline"></form>
+                        <a href="{{ route('dashboard') }}"
+                            class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Logout</button>
                         </form>
@@ -62,9 +71,99 @@
             </div>
         </div>
 
-        <div class="public-content mt-5">
-            <div class="container">
-                {{ $slot }}
+        <div class="public-content" style="margin-top: 60px;">
+            <div class="container-fluid px-5">
+                <div class="row">
+                    <!-- Sidebar Navigation -->
+                    <div class="col-lg-2 mb-5 mb-lg-0">
+                        <div class="card card-custom gutter-b sticky-sidebar">
+                            <div class="card-header border-0 pb-0">
+                                <h3 class="card-title font-weight-bolder text-dark">Tools Menu</h3>
+                            </div>
+                            <div class="card-body pt-2">
+                                <div class="navi navi-bold navi-hover navi-active navi-link-rounded">
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('vuln-scanner.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('vuln-scanner.*') ? 'active' : '' }}">
+                                            <span class="navi-icon mr-2">
+                                                <i class="flaticon-safe-shield-protection"></i>
+                                            </span>
+                                            <span class="navi-text font-size-lg">Vuln Scanner</span>
+                                        </a>
+                                    </div>
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('subdomain-finder.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('subdomain-finder.*') ? 'active' : '' }}">
+                                            <span class="navi-icon mr-2">
+                                                <i class="flaticon-search"></i>
+                                            </span>
+                                            <span class="navi-text font-size-lg">Subdomain Finder</span>
+                                        </a>
+                                    </div>
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('dns-checker.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('dns-checker.*') ? 'active' : '' }}">
+                                            <span class="navi-icon mr-2">
+                                                <i class="flaticon2-world"></i>
+                                            </span>
+                                            <span class="navi-text font-size-lg">DNS Checker</span>
+                                        </a>
+                                    </div>
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('ssl-checker.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('ssl-checker.*') ? 'active' : '' }}">
+                                            <span class="navi-icon mr-2">
+                                                <i class="flaticon-lock"></i>
+                                            </span>
+                                            <span class="navi-text font-size-lg">SSL Checker</span>
+                                        </a>
+                                    </div>
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('dnssec-analyzer.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('dnssec-analyzer.*') ? 'active' : '' }}">
+                                            <span class="navi-icon mr-2">
+                                                <i class="flaticon2-shield"></i>
+                                            </span>
+                                            <span class="navi-text font-size-lg">DNSSEC Analyzer</span>
+                                        </a>
+                                    </div>
+                                    <div class="navi-item mb-2">
+                                        <a href="{{ route('domain-checker.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('domain-checker.*') ? 'active' : '' }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="symbol symbol-30 mr-2">
+                                                    <span class="symbol-label bg-transparent">
+                                                        <i
+                                                            class="flaticon-search {{ request()->routeIs('domain-checker.*') ? 'text-white' : 'text-dark-50' }}"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="font-weight-bold">Domain Whois</span>
+                                            </div>
+                                        </a>
+
+                                        <a href="{{ route('web-analyzer.index') }}"
+                                            class="navi-link py-4 {{ request()->routeIs('web-analyzer.*') ? 'active' : '' }}">
+                                            <div class="d-flex align-items-center">
+                                                <span class="symbol symbol-30 mr-2">
+                                                    <span class="symbol-label bg-transparent">
+                                                        <i
+                                                            class="flaticon2-browser-2 {{ request()->routeIs('web-analyzer.*') ? 'text-white' : 'text-dark-50' }}"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="font-weight-bold">Web Analyzer</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="col-lg-10">
+                        {{ $slot }}
+                    </div>
+                </div>
             </div>
         </div>
 

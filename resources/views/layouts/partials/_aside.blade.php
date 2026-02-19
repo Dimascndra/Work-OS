@@ -77,8 +77,8 @@
                 </li>
 
                 @include('layouts.partials._menu', [
-                    'config' => config('menus.security'),
-                    'sectionTitle' => 'Security',
+                    'config' => config('menus.productivity'),
+                    'sectionTitle' => 'Productivity',
                 ])
 
                 @include('layouts.partials._menu', [
@@ -87,7 +87,12 @@
                 ])
 
                 @include('layouts.partials._menu', [
-                    'config' => config('menus.productivity'),
+                    'config' => config('menus.security'),
+                    'sectionTitle' => 'Security',
+                ])
+
+                @include('layouts.partials._menu', [
+                    'config' => config('menus.tools'),
                     'sectionTitle' => 'Tools',
                 ])
 

@@ -2,68 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSnippetRequest;
+use App\Http\Requests\UpdateSnippetRequest;
 use App\Models\Snippet;
+use App\Services\SnippetService;
 use Illuminate\Http\Request;
 
 class SnippetController extends Controller
 {
+    protected $snippetService;
+
+    public function __construct(SnippetService $snippetService)
+    {
+        $this->snippetService = $snippetService;
+    }
+
     public function index()
     {
-        $snippets = Snippet::latest()->get();
-        return view('pages.snippets.index', compact('snippets'));
+        return view('pages.snippets.index');
     }
 
-    public function create()
+    public function getSnippets()
     {
-        return view('pages.snippets.create');
-    }
+        $snippets = $this->snippetService->getAll();
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'code_content' => 'required|string',
-            'language' => 'required|string',
-            'tags' => 'nullable|string', // Comma separated in UI, convert to json array
+        return response()->json([
+            'success' => true,
+            'message' => 'Snippets retrieved successfully',
+            'data' => $snippets
         ]);
-
-        if ($request->has('tags')) {
-            $tags = array_map('trim', explode(',', $request->tags));
-            $validated['tags'] = $tags;
-        }
-
-        Snippet::create($validated);
-
-        return redirect()->route('snippets.index')->with('success', 'Snippet created successfully');
     }
 
-    public function edit(Snippet $snippet)
+    public function store(StoreSnippetRequest $request)
     {
-        return view('pages.snippets.edit', compact('snippet'));
+        $snippet = $this->snippetService->create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Snippet created successfully',
+            'data' => $snippet
+        ], 201);
     }
 
-    public function update(Request $request, Snippet $snippet)
+    public function update(UpdateSnippetRequest $request, Snippet $snippet)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'code_content' => 'required|string',
-            'language' => 'required|string',
-            'tags' => 'nullable|string',
+        $snippet = $this->snippetService->update($snippet, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Snippet updated successfully',
+            'data' => $snippet
         ]);
-
-        if ($request->has('tags')) {
-            $tags = array_map('trim', explode(',', $request->tags));
-            $validated['tags'] = $tags;
-        }
-
-        $snippet->update($validated);
-
-        return redirect()->route('snippets.index')->with('success', 'Snippet updated successfully');
     }
 
     public function destroy(Snippet $snippet)
     {
-        $snippet->delete();
-        return redirect()->route('snippets.index')->with('success', 'Snippet deleted successfully');
+        $this->snippetService->delete($snippet);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Snippet deleted successfully',
+            'data' => null
+        ]);
     }
 }

@@ -1,10 +1,15 @@
+@props(['fluid' => false])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@php
+    $containerClass = $fluid ? 'container-fluid' : 'container';
+@endphp
 
 <head>
     <meta charset="utf-8" />
     <title>{{ $title ?? config('app.name') }} | Metronic Work OS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -48,7 +53,7 @@
                     @endif
 
                     <div class="d-flex flex-column-fluid">
-                        <div class="container">
+                        <div class="{{ $containerClass }}">
                             {{ $slot }}
                         </div>
                     </div>

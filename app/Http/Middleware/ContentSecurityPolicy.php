@@ -19,12 +19,12 @@ class ContentSecurityPolicy
 
         $csp = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
             "font-src 'self' https://fonts.gstatic.com data:",
             "object-src 'none'",
             "img-src 'self' data: https:",
-            "connect-src 'self'",
+            "connect-src 'self' https://api.hackertarget.com https://crt.sh", // Just in case we move to client side later, but for now mostly backend. Actually map shouldn't need connect.
             "frame-ancestors 'self'",
             "base-uri 'self'",
             "form-action 'self'",

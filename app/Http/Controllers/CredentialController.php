@@ -2,56 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCredentialRequest;
+use App\Http\Requests\UpdateCredentialRequest;
 use App\Models\Credential;
+use App\Services\CredentialService;
 use Illuminate\Http\Request;
 
 class CredentialController extends Controller
 {
+    protected $credentialService;
+
+    public function __construct(CredentialService $credentialService)
+    {
+        $this->credentialService = $credentialService;
+    }
+
     public function index()
     {
-        $credentials = Credential::all();
-        return view('pages.credentials.index', compact('credentials'));
+        return view('pages.credentials.index');
     }
 
-    public function create()
+    public function getCredentials()
     {
-        return view('pages.credentials.create');
-    }
+        $credentials = $this->credentialService->getAll();
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'category' => 'required|string',
-            'service_name' => 'required|string',
-            'url' => 'nullable|url',
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'notes' => 'nullable|string',
+        return response()->json([
+            'success' => true,
+            'message' => 'Credentials retrieved successfully',
+            'data' => $credentials
         ]);
-
-        Credential::create($validated);
-
-        return redirect()->route('credentials.index')->with('success', 'Credential created successfully');
     }
 
-    public function edit(Credential $credential)
+    public function store(StoreCredentialRequest $request)
     {
-        return view('pages.credentials.edit', compact('credential'));
+        $credential = $this->credentialService->create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Credential created successfully',
+            'data' => $credential
+        ], 201);
     }
 
-    public function update(Request $request, Credential $credential)
+    public function update(UpdateCredentialRequest $request, Credential $credential)
     {
-        $validated = $request->validate([
-            'category' => 'required|string',
-            'service_name' => 'required|string',
-            'url' => 'nullable|url',
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'notes' => 'nullable|string',
+        $credential = $this->credentialService->update($credential, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Credential updated successfully',
+            'data' => $credential
         ]);
+    }
 
-        $credential->update($validated);
+    public function destroy(Credential $credential)
+    {
+        $this->credentialService->delete($credential);
 
-        return redirect()->route('credentials.index')->with('success', 'Credential updated successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Credential deleted successfully',
+            'data' => null
+        ]);
     }
 }

@@ -2,82 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServerRequest;
+use App\Http\Requests\UpdateServerRequest;
 use App\Models\Server;
+use App\Services\ServerService;
 use Illuminate\Http\Request;
 
 class ServerController extends Controller
 {
+    protected $serverService;
+
+    public function __construct(ServerService $serverService)
+    {
+        $this->serverService = $serverService;
+    }
+
     public function index()
     {
-        $servers = Server::all();
-        return view('pages.servers.index', compact('servers'));
+        return view('pages.servers.index');
     }
 
-    public function create()
+    public function getServers()
     {
-        return view('pages.servers.create');
-    }
+        $servers = $this->serverService->getAll();
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'ip_address' => 'required|ip',
-            'port' => 'required|integer',
-            'username' => 'required|string',
-            'password' => 'nullable|string',
-            'private_key' => 'nullable|string',
-            'public_key' => 'nullable|string',
-            'os_type' => 'required|string',
-            'server_type' => 'required|in:Physical,VPS,Cloud,Container,Other',
-            'is_active' => 'boolean',
-            'description' => 'nullable|string',
+        return response()->json([
+            'success' => true,
+            'message' => 'Servers retrieved successfully',
+            'data' => $servers
         ]);
-
-        // checkbox handling for boolean
-        $validated['is_active'] = $request->has('is_active');
-
-        Server::create($validated);
-
-        return redirect()->route('servers.index')->with('success', 'Server created successfully');
     }
 
-    public function edit(Server $server)
+    public function store(StoreServerRequest $request)
     {
-        return view('pages.servers.edit', compact('server'));
+        $server = $this->serverService->create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Server created successfully',
+            'data' => $server
+        ], 201);
     }
 
-    public function update(Request $request, Server $server)
+    public function update(UpdateServerRequest $request, Server $server)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'ip_address' => 'required|ip',
-            'port' => 'required|integer',
-            'username' => 'required|string',
-            'password' => 'nullable|string',
-            'private_key' => 'nullable|string',
-            'public_key' => 'nullable|string',
-            'os_type' => 'required|string',
-            'server_type' => 'required|in:Physical,VPS,Cloud,Container,Other',
-            'is_active' => 'boolean',
-            'description' => 'nullable|string',
+        $server = $this->serverService->update($server, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Server updated successfully',
+            'data' => $server
         ]);
-
-        $validated['is_active'] = $request->has('is_active');
-
-        // If password field is empty, don't update it (preserve existing password)
-        if (empty($validated['password'])) {
-            unset($validated['password']);
-        }
-
-        $server->update($validated);
-
-        return redirect()->route('servers.index')->with('success', 'Server updated successfully');
     }
 
     public function destroy(Server $server)
     {
-        $server->delete();
-        return redirect()->route('servers.index')->with('success', 'Server deleted successfully');
+        $this->serverService->delete($server);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Server deleted successfully',
+            'data' => null
+        ]);
     }
 }
