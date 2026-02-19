@@ -19,7 +19,18 @@ class CredentialController extends Controller
 
     public function index()
     {
-        return view('pages.credentials.index');
+        $credentials = $this->credentialService->getAll();
+        return view('pages.credentials.index', compact('credentials'));
+    }
+
+    public function create()
+    {
+        return view('pages.credentials.create');
+    }
+
+    public function edit(Credential $credential)
+    {
+        return view('pages.credentials.edit', compact('credential'));
     }
 
     public function getCredentials()
@@ -37,32 +48,47 @@ class CredentialController extends Controller
     {
         $credential = $this->credentialService->create($request->validated());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Credential created successfully',
-            'data' => $credential
-        ], 201);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Credential created successfully',
+                'data' => $credential
+            ], 201);
+        }
+
+        return redirect()->route('credentials.index')
+            ->with('success', 'Credential created successfully.');
     }
 
     public function update(UpdateCredentialRequest $request, Credential $credential)
     {
         $credential = $this->credentialService->update($credential, $request->validated());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Credential updated successfully',
-            'data' => $credential
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Credential updated successfully',
+                'data' => $credential
+            ]);
+        }
+
+        return redirect()->route('credentials.index')
+            ->with('success', 'Credential updated successfully.');
     }
 
     public function destroy(Credential $credential)
     {
         $this->credentialService->delete($credential);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Credential deleted successfully',
-            'data' => null
-        ]);
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Credential deleted successfully',
+                'data' => null
+            ]);
+        }
+
+        return redirect()->route('credentials.index')
+            ->with('success', 'Credential deleted successfully.');
     }
 }

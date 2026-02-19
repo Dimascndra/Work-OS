@@ -74,8 +74,10 @@ Route::middleware('auth')->group(function () {
     // Explicit Credentials Routes
     Route::prefix('credentials')->name('credentials.')->group(function () {
         Route::get('/', [App\Http\Controllers\CredentialController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\CredentialController::class, 'create'])->name('create');
         Route::get('/list', [App\Http\Controllers\CredentialController::class, 'getCredentials'])->name('list');
         Route::post('/', [App\Http\Controllers\CredentialController::class, 'store'])->name('store');
+        Route::get('/{credential}/edit', [App\Http\Controllers\CredentialController::class, 'edit'])->name('edit');
         Route::put('/{credential}', [App\Http\Controllers\CredentialController::class, 'update'])->name('update');
         Route::delete('/{credential}', [App\Http\Controllers\CredentialController::class, 'destroy'])->name('destroy');
     });
