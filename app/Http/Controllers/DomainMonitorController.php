@@ -19,11 +19,7 @@ class DomainMonitorController extends Controller
 
     public function index()
     {
-        // Need to pass servers for modal dropdown if we want to render it in blade initially,
-        // OR fetch via AJAX. Let's pass it for simplicity in current view,
-        // but for AJAX modal we usually fetch options or embed json.
-        $servers = \App\Models\Server::all();
-        return view('pages.domain-monitors.index', compact('servers'));
+        return view('pages.domain-monitors.index');
     }
 
     public function getMonitors()
@@ -33,7 +29,7 @@ class DomainMonitorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Monitors retrieved successfully',
-            'data' => $monitors
+            'data'    => $monitors
         ]);
     }
 
@@ -44,7 +40,7 @@ class DomainMonitorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Monitor created successfully',
-            'data' => $monitor
+            'data'    => $monitor
         ], 201);
     }
 
@@ -55,7 +51,7 @@ class DomainMonitorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Monitor updated successfully',
-            'data' => $monitor
+            'data'    => $monitor
         ]);
     }
 
@@ -66,7 +62,18 @@ class DomainMonitorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Monitor deleted successfully',
-            'data' => null
+            'data'    => null
+        ]);
+    }
+
+    public function check(DomainMonitor $domainMonitor)
+    {
+        $monitor = $this->domainMonitorService->checkDomain($domainMonitor);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Domain checked successfully',
+            'data'    => $monitor
         ]);
     }
 }

@@ -18,11 +18,7 @@ class DomainMonitor extends Model
         return [
             'ssl_expires_at' => 'datetime',
             'domain_expires_at' => 'datetime',
+            'last_checked_at' => 'datetime',
         ];
-    }
-
-    public function server()
-    {
-        return $this->belongsTo(Server::class);
     }
 }

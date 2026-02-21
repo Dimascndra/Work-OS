@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [App\Http\Controllers\DomainMonitorController::class, 'store'])->name('store');
         Route::put('/{domainMonitor}', [App\Http\Controllers\DomainMonitorController::class, 'update'])->name('update');
         Route::delete('/{domainMonitor}', [App\Http\Controllers\DomainMonitorController::class, 'destroy'])->name('destroy');
+        Route::post('/{domainMonitor}/check', [App\Http\Controllers\DomainMonitorController::class, 'check'])->name('check');
     });
 
     // Productivity Modules

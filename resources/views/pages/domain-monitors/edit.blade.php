@@ -10,30 +10,7 @@
             @csrf
             @method('PUT')
 
-            <div class="row">
-                <div class="col-md-6">
-                    <x-input label="Domain URL" name="domain_url" :value="$domainMonitor->domain_url" placeholder="https://example.com"
-                        required />
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="server_id">Linked Server (Optional)</label>
-                        <select class="form-control form-control-solid select2 @error('server_id') is-invalid @enderror"
-                            id="server_id" name="server_id">
-                            <option value="">None</option>
-                            @foreach ($servers as $server)
-                                <option value="{{ $server->id }}"
-                                    {{ $domainMonitor->server_id == $server->id ? 'selected' : '' }}>
-                                    {{ $server->name }} ({{ $server->ip_address }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('server_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
+            <x-input label="Domain URL" name="domain_url" :value="$domainMonitor->domain_url" placeholder="https://example.com" required />
 
             <div class="form-group">
                 <label for="status">Status <span class="text-danger">*</span></label>
@@ -57,10 +34,6 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
-                $('#server_id').select2({
-                    placeholder: "Select Server (Optional)",
-                    allowClear: true
-                });
                 $('#status').select2({
                     placeholder: "Select Status",
                     allowClear: false
