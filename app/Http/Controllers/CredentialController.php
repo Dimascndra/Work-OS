@@ -20,10 +20,6 @@ class CredentialController extends Controller
     public function index()
     {
         $credentials = $this->credentialService->getAll();
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b0dab70f5ae312dc4126c283e6aa034a7fd47ee
         return view('pages.credentials.index', compact('credentials'));
     }
 
