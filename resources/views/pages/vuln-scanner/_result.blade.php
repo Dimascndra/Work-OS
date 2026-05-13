@@ -30,7 +30,7 @@
 
         <!-- Summary Section -->
         <div class="alert alert-custom alert-light-{{ $res['color'] }} fade show mb-10" role="alert">
-            <div class="alert-icon"><i class="flaticon-info"></i></div>
+            <div class="alert-icon"><i class="flaticon2-information"></i></div>
             <div class="alert-text font-weight-bold">
                 {{ $res['summary'] }}
             </div>
@@ -44,7 +44,7 @@
                         <div class="card-title" data-toggle="collapse" data-target="#collapse{{ $key }}">
                             <div class="d-flex align-items-center justify-content-between w-100">
                                 <span>
-                                    <i class="flaticon-interface-6 mr-2"></i> {{ $cat['title'] }}
+                                    <i class="flaticon2-list-3 mr-2"></i> {{ $cat['title'] }}
                                 </span>
                                 <span
                                     class="label label-light-{{ $cat['score'] == $cat['max'] ? 'success' : ($cat['score'] > 0 ? 'warning' : 'danger') }} label-inline font-weight-bold ml-auto">
@@ -79,7 +79,7 @@
         @if (isset($res['recommendations']) && count($res['recommendations']) > 0)
             <div class="mt-10">
                 <h3 class="font-weight-bolder text-dark mb-5">
-                    <i class="flaticon-light icon-lg text-warning mr-2"></i> Saran Perbaikan
+                    <i class="flaticon2-exclamation icon-lg text-warning mr-2"></i> Saran Perbaikan
                 </h3>
 
                 @foreach ($res['recommendations'] as $rec)
@@ -111,7 +111,7 @@
 @elseif(isset($error))
     <x-card title="❌ Error" class="card-stretch gutter-b bg-light-danger">
         <div class="d-flex flex-column align-items-center text-center p-5">
-            <i class="flaticon-exclamation-2 icon-4x text-danger mb-4"></i>
+            <i class="flaticon2-warning icon-4x text-danger mb-4"></i>
             <h4 class="font-weight-bold text-danger">{{ $error }}</h4>
         </div>
     </x-card>
@@ -120,7 +120,7 @@
         <div class="d-flex flex-column align-items-center justify-content-center h-100 min-h-300px text-center">
             <div class="symbol symbol-100 symbol-light-info mb-5">
                 <span class="symbol-label">
-                    <i class="flaticon-safe-shield-protection icon-4x text-info"></i>
+                    <i class="flaticon2-protection icon-4x text-info"></i>
                 </span>
             </div>
             <h4 class="font-weight-bolder text-dark">Enter a website URL</h4>

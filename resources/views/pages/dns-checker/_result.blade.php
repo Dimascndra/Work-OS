@@ -1,4 +1,37 @@
 @if (isset($res))
+    @if (isset($summary))
+        <div class="col-lg-12 mb-5">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="font-size-h2 font-weight-boldest text-primary">{{ $summary['success'] }}/{{ $summary['providers'] }}</div>
+                            <div class="text-muted font-weight-bold">Resolver berhasil</div>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="font-size-h2 font-weight-boldest text-{{ $summary['consistent'] ? 'success' : 'warning' }}">
+                                {{ $summary['consistent'] ? 'Konsisten' : $summary['variants'] . ' variasi' }}
+                            </div>
+                            <div class="text-muted font-weight-bold">Konsistensi jawaban</div>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="font-size-h2 font-weight-boldest text-info">
+                                {{ $summary['ttl_min'] ?? '-' }}{{ $summary['ttl_max'] && $summary['ttl_max'] !== $summary['ttl_min'] ? ' - ' . $summary['ttl_max'] : '' }}
+                            </div>
+                            <div class="text-muted font-weight-bold">Rentang TTL</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="font-size-h2 font-weight-boldest text-{{ $summary['dnssec_validated'] > 0 ? 'success' : 'muted' }}">
+                                {{ $summary['dnssec_validated'] }}
+                            </div>
+                            <div class="text-muted font-weight-bold">Jawaban DNSSEC AD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Map Section -->
     <div class="col-lg-12 mb-5">
         <div class="card card-custom gutter-b">
@@ -69,6 +102,12 @@
                                                 <span class="text-muted font-weight-bold">No Records</span>
                                             @else
                                                 <span class="text-danger font-weight-bold">Error</span>
+                                            @endif
+                                            @if (!empty($r['records'][0]['ttl']))
+                                                <span class="text-muted font-size-xs">TTL {{ $r['records'][0]['ttl'] }}s</span>
+                                            @endif
+                                            @if (!empty($r['dnssec']))
+                                                <span class="label label-light-success label-inline font-weight-bold mt-1">DNSSEC</span>
                                             @endif
                                         </div>
                                     </td>

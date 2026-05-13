@@ -135,7 +135,7 @@ class DnsSecAnalyzerController extends Controller
                 $events[] = [
                     'type' => 'info', // Info, not error, as not all zones are signed
                     'message' => "No DS records found for {$zoneName} in the {$parent} zone",
-                    'icon' => 'flaticon-info'
+                    'icon' => 'flaticon2-information'
                 ];
                 $status = 'info'; // Downgrade status if chain breaks (but strictly speaking, insecure is valid DNS)
             }
@@ -195,7 +195,7 @@ class DnsSecAnalyzerController extends Controller
                 $events[] = [
                     'type' => 'warning',
                     'message' => "No RRSIGs found for DNSKEY in {$zoneName}",
-                    'icon' => 'flaticon-warning-sign'
+                    'icon' => 'flaticon2-warning'
                 ];
                 $status = 'warning';
             }
@@ -203,7 +203,7 @@ class DnsSecAnalyzerController extends Controller
             $events[] = [
                 'type' => 'warning',
                 'message' => "No DNSKEY records found for {$zoneName}",
-                'icon' => 'flaticon-warning-sign'
+                'icon' => 'flaticon2-warning'
             ];
             // If no DS was found either, it's just unsigned, not necessarily a warning failure unless we expect it.
             // But Verisign shows red/warning for missing keys if expected.

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SecurityToolHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -18,17 +19,15 @@ class SubdomainFinderController extends Controller
             'url' => 'required',
         ]);
 
-        $input = $request->input('url');
-
-        // Extract domain from URL or use input as is if it looks like a domain
-        $domain = $this->extractDomain($input);
+        $domain = SecurityToolHelper::normalizeDomain($request->input('url'));
 
         if (!$domain) {
-            return back()->with('error', 'Invalid domain provided.')->withInput();
+            return back()->with('error', 'Domain tidak valid.')->withInput();
         }
 
         try {
             $subdomains = [];
+            $sources = [];
             $errorMsg = null;
             $fetched = false;
 
@@ -45,6 +44,7 @@ class SubdomainFinderController extends Controller
                                     $name = trim($name);
                                     if ($name && strpos($name, '*') === false) {
                                         $subdomains[] = $name;
+                                        $sources[strtolower(trim($name, '.'))][] = 'crt.sh';
                                     }
                                 }
                             }
@@ -69,6 +69,7 @@ class SubdomainFinderController extends Controller
                                 $name = trim($parts[0]);
                                 if ($name && $name !== $domain) { // Basic basic validation
                                     $subdomains[] = $name;
+                                    $sources[strtolower(trim($name, '.'))][] = 'HackerTarget';
                                 }
                             }
                         }
@@ -89,7 +90,10 @@ class SubdomainFinderController extends Controller
             }
 
             // Unique and Sort
-            $subdomains = array_unique($subdomains);
+            $subdomains = array_filter(array_unique(array_map(function ($sub) use ($domain) {
+                $sub = strtolower(trim($sub, ". \t\n\r\0\x0B"));
+                return str_ends_with($sub, $domain) ? $sub : null;
+            }, $subdomains)));
             sort($subdomains);
 
             // Limit to top 100 to avoid long execution times for huge domains during this demo
@@ -103,12 +107,16 @@ class SubdomainFinderController extends Controller
                 // specific fix for wildcard
                 if (strpos($sub, '*') !== false) continue;
 
-                $ip = gethostbyname($sub);
-                $isResolved = $ip !== $sub; // gethostbyname returns domain on failure
+                $dns = $this->resolveSubdomain($sub);
+                $ip = $dns['ip'];
+                $isResolved = $ip !== null;
 
                 $resultsWithIp[] = [
                     'subdomain' => $sub,
                     'ip' => $isResolved ? $ip : null,
+                    'aaaa' => $dns['aaaa'],
+                    'cname' => $dns['cname'],
+                    'sources' => array_values(array_unique($sources[$sub] ?? ['Public records'])),
                     'provider' => 'Unknown',
                     'location' => 'Unknown'
                 ];
@@ -155,18 +163,24 @@ class SubdomainFinderController extends Controller
             unset($res); // break reference
 
             if ($request->ajax()) {
+                $stats = $this->buildStats($resultsWithIp);
                 $html = view('pages.subdomain-finder._result', ['res' => [
                     'domain' => $domain,
                     'subdomains' => $resultsWithIp,
-                    'count' => count($resultsWithIp)
+                    'count' => count($resultsWithIp),
+                    'resolved_count' => $stats['resolved_count'],
+                    'source_count' => $stats['source_count'],
                 ]])->render();
                 return response()->json(['success' => true, 'html' => $html]);
             }
 
+            $stats = $this->buildStats($resultsWithIp);
             return back()->with('subdomain_result', [
                 'domain' => $domain,
                 'subdomains' => $resultsWithIp,
-                'count' => count($resultsWithIp)
+                'count' => count($resultsWithIp),
+                'resolved_count' => $stats['resolved_count'],
+                'source_count' => $stats['source_count'],
             ])->withInput();
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -177,19 +191,37 @@ class SubdomainFinderController extends Controller
         }
     }
 
-    private function extractDomain($url)
+    private function resolveSubdomain(string $subdomain): array
     {
-        // Add scheme if missing to help parse_url
-        if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
-            $url = 'http://' . $url;
+        $result = ['ip' => null, 'aaaa' => null, 'cname' => null];
+
+        try {
+            $a = dns_get_record($subdomain, DNS_A) ?: [];
+            $aaaa = dns_get_record($subdomain, DNS_AAAA) ?: [];
+            $cname = dns_get_record($subdomain, DNS_CNAME) ?: [];
+
+            $result['ip'] = $a[0]['ip'] ?? null;
+            $result['aaaa'] = $aaaa[0]['ipv6'] ?? null;
+            $result['cname'] = $cname[0]['target'] ?? null;
+        } catch (\Throwable $e) {
+            // Leave unresolved values null.
         }
 
-        $parsed = parse_url($url);
+        return $result;
+    }
 
-        if (isset($parsed['host'])) {
-            return $parsed['host'];
+    private function buildStats(array $results): array
+    {
+        $sources = [];
+        foreach ($results as $item) {
+            foreach (($item['sources'] ?? []) as $source) {
+                $sources[] = $source;
+            }
         }
 
-        return null;
+        return [
+            'resolved_count' => count(array_filter($results, fn ($item) => !empty($item['ip']) || !empty($item['aaaa']))),
+            'source_count' => count(array_unique($sources)),
+        ];
     }
 }

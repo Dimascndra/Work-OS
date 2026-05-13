@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SecurityToolHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -19,13 +20,10 @@ class DnsCheckerController extends Controller
             'type' => 'required|in:A,AAAA,MX,CNAME,NS,TXT,PTR,SOA',
         ]);
 
-        $input = $request->input('domain');
-        // Parse host from URL if user entered full URL
-        if (!preg_match('#^https?://#', $input)) {
-            $input = 'http://' . $input;
+        $domain = SecurityToolHelper::normalizeDomain($request->input('domain'));
+        if (!$domain) {
+            return back()->withErrors(['domain' => 'Domain tidak valid.'])->withInput();
         }
-        $parsed = parse_url($input);
-        $domain = $parsed['host'] ?? $request->input('domain');
 
         $type = $request->input('type');
 
@@ -199,12 +197,14 @@ class DnsCheckerController extends Controller
             $results[$key] = array_merge($info, $checkResult);
         }
 
+        $summary = $this->buildSummary($results, $type);
+
         if ($request->ajax()) {
-            $html = view('pages.dns-checker._result', ['res' => $results])->render();
-            return response()->json(['success' => true, 'html' => $html, 'results' => $results]);
+            $html = view('pages.dns-checker._result', ['res' => $results, 'summary' => $summary, 'domain' => $domain, 'type' => $type])->render();
+            return response()->json(['success' => true, 'html' => $html, 'results' => $results, 'summary' => $summary]);
         }
 
-        return back()->with('dns_results', $results)->withInput();
+        return back()->with('dns_results', $results)->with('dns_summary', $summary)->withInput();
     }
 
     private function resolveDns($domain, $type, $provider)
@@ -291,16 +291,62 @@ class DnsCheckerController extends Controller
                     $data = array_map(function ($a) {
                         return $a['data'];
                     }, $json['Answer']);
+                    $records = array_map(function ($a) {
+                        return [
+                            'value' => $a['data'] ?? '',
+                            'ttl' => $a['TTL'] ?? null,
+                            'type' => $a['type'] ?? null,
+                        ];
+                    }, $json['Answer']);
                     sort($data);
-                    return ['status' => 'success', 'data' => $data, 'dnssec' => $dnssec];
+                    return ['status' => 'success', 'data' => $data, 'records' => $records, 'dnssec' => $dnssec];
                 }
                 // No answer section means empty or failure for that type
-                return ['status' => 'empty', 'data' => [], 'dnssec' => $dnssec];
+                return ['status' => 'empty', 'data' => [], 'records' => [], 'dnssec' => $dnssec];
             }
-            return ['status' => 'error', 'message' => 'HTTP ' . $response->status(), 'data' => [], 'dnssec' => false];
+            return ['status' => 'error', 'message' => 'HTTP ' . $response->status(), 'data' => [], 'records' => [], 'dnssec' => false];
         } catch (\Exception $e) {
-            return ['status' => 'error', 'message' => 'Connection Failed', 'data' => [], 'dnssec' => false];
+            return ['status' => 'error', 'message' => 'Connection Failed', 'data' => [], 'records' => [], 'dnssec' => false];
         }
+    }
+
+    private function buildSummary(array $results, string $type): array
+    {
+        $successful = array_filter($results, fn ($r) => ($r['status'] ?? null) === 'success');
+        $empty = array_filter($results, fn ($r) => ($r['status'] ?? null) === 'empty');
+        $errors = array_filter($results, fn ($r) => ($r['status'] ?? null) === 'error');
+        $sets = [];
+        $ttlValues = [];
+        $dnssecCount = 0;
+
+        foreach ($successful as $r) {
+            $data = $r['data'] ?? [];
+            sort($data);
+            $sets[] = implode('|', $data);
+
+            foreach (($r['records'] ?? []) as $record) {
+                if (isset($record['ttl'])) {
+                    $ttlValues[] = (int) $record['ttl'];
+                }
+            }
+
+            if (!empty($r['dnssec'])) {
+                $dnssecCount++;
+            }
+        }
+
+        return [
+            'type' => $type,
+            'providers' => count($results),
+            'success' => count($successful),
+            'empty' => count($empty),
+            'errors' => count($errors),
+            'consistent' => count(array_unique($sets)) <= 1,
+            'variants' => count(array_unique($sets)),
+            'dnssec_validated' => $dnssecCount,
+            'ttl_min' => empty($ttlValues) ? null : min($ttlValues),
+            'ttl_max' => empty($ttlValues) ? null : max($ttlValues),
+        ];
     }
 
     private function extractValue($record, $type)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SecurityToolHelper;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -18,15 +19,17 @@ class SslCheckerController extends Controller
             'domain' => 'required|string',
         ]);
 
-        $domain = $request->input('domain');
-        // Remove protocol if present
-        $domain = preg_replace('#^https?://#', '', $domain);
-        // Remove trailing slash
-        $domain = rtrim($domain, '/');
+        $domain = SecurityToolHelper::normalizeDomain($request->input('domain'));
+        if (!$domain) {
+            return back()->withErrors(['domain' => 'Domain tidak valid.'])->withInput();
+        }
 
         $streamContext = stream_context_create([
             'ssl' => [
                 'capture_peer_cert' => true,
+                'capture_peer_cert_chain' => true,
+                'SNI_enabled' => true,
+                'peer_name' => $domain,
                 'verify_peer' => false,
                 'verify_peer_name' => false,
             ],
@@ -67,6 +70,11 @@ class SslCheckerController extends Controller
 
             $context = stream_context_get_params($client);
             $cert = openssl_x509_parse($context['options']['ssl']['peer_certificate']);
+            $chain = $context['options']['ssl']['peer_certificate_chain'] ?? [];
+            $fingerprint = function_exists('openssl_x509_fingerprint')
+                ? openssl_x509_fingerprint($context['options']['ssl']['peer_certificate'], 'sha256')
+                : null;
+            $meta = stream_get_meta_data($client);
 
             if (!$cert) {
                 if ($request->ajax()) {
@@ -92,6 +100,14 @@ class SslCheckerController extends Controller
             $certificateData = [
                 'domain' => $domain,
                 'issuer' => $cert['issuer']['CN'] ?? $cert['issuer']['O'] ?? 'Unknown',
+                'subject' => $cert['subject']['CN'] ?? $domain,
+                'serial_number' => $cert['serialNumberHex'] ?? $cert['serialNumber'] ?? 'Unknown',
+                'signature_type' => $cert['signatureTypeLN'] ?? 'Unknown',
+                'fingerprint_sha256' => strtoupper($fingerprint ?: 'Unknown'),
+                'san' => $this->extractSubjectAltNames($cert),
+                'chain_count' => count($chain),
+                'protocol' => $meta['crypto']['protocol'] ?? 'Unknown',
+                'cipher' => $meta['crypto']['cipher_name'] ?? 'Unknown',
                 'valid_from' => $validFrom->format('d M Y H:i:s'),
                 'valid_to' => $validTo->format('d M Y H:i:s'),
                 'days_remaining' => (int) $daysRemaining,
@@ -118,5 +134,23 @@ class SslCheckerController extends Controller
 
             return back()->with('error', "Unable to check {$domain}: " . $msg)->withInput();
         }
+    }
+
+    private function extractSubjectAltNames(array $cert): array
+    {
+        $raw = $cert['extensions']['subjectAltName'] ?? '';
+        if ($raw === '') {
+            return [];
+        }
+
+        $names = [];
+        foreach (explode(',', $raw) as $part) {
+            $part = trim($part);
+            if (stripos($part, 'DNS:') === 0) {
+                $names[] = substr($part, 4);
+            }
+        }
+
+        return array_values(array_unique($names));
     }
 }

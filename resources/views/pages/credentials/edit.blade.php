@@ -50,14 +50,13 @@
                 </div>
             </div>
 
-            <x-input label="Password" name="password" type="password" placeholder="Enter password" :value="$credential->password"
-                required />
+            <x-input label="Password" name="password" type="password" placeholder="Enter a new password" />
             <small class="form-text text-muted mb-4">You can update the password or leave it as is.</small>
 
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea class="form-control form-control-solid @error('notes') is-invalid @enderror" id="notes" name="notes"
-                    rows="3" placeholder="Additional notes...">{{ old('notes', $credential->notes) }}</textarea>
+                    rows="3" placeholder="Additional notes...">{{ old('notes', $credential->notes ?? '') }}</textarea>
                 @error('notes')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

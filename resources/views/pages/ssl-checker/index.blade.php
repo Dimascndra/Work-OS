@@ -6,7 +6,7 @@
                 <div class="d-flex align-items-center mb-5">
                     <div class="symbol symbol-50 symbol-light-success mr-4">
                         <span class="symbol-label">
-                            <i class="flaticon-lock icon-lg text-success"></i>
+                            <i class="flaticon2-lock icon-lg text-success"></i>
                         </span>
                     </div>
                     <div>
@@ -30,7 +30,7 @@
                     </button>
                 </form>
                 <div class="text-muted mt-5">
-                    <i class="flaticon-info text-primary mr-1"></i> We verify certificate expiration date and issuer
+                    <i class="flaticon2-information text-primary mr-1"></i> We verify certificate expiration date and issuer
                     from port 443.
                 </div>
             </x-card>

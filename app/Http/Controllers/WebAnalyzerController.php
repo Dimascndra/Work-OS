@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SecurityToolHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use DOMDocument;
@@ -19,7 +20,10 @@ class WebAnalyzerController extends Controller
             'url' => 'required|url'
         ]);
 
-        $url = $request->input('url');
+        $url = SecurityToolHelper::normalizeUrl($request->input('url'));
+        if (!$url) {
+            return back()->withErrors(['url' => 'URL tidak valid.'])->withInput();
+        }
         $result = [];
 
         try {
@@ -61,6 +65,10 @@ class WebAnalyzerController extends Controller
 
             // 2. Security Headers Check
             $headers = $response->headers();
+            $headerMap = [];
+            foreach ($headers as $key => $value) {
+                $headerMap[strtolower($key)] = is_array($value) ? implode(', ', $value) : $value;
+            }
             $securityChecks = [
                 'X-Frame-Options' => ['desc' => 'Protects against Clickjacking', 'passed' => false],
                 'X-XSS-Protection' => ['desc' => 'Enables browser XSS filtering', 'passed' => false],
@@ -108,22 +116,35 @@ class WebAnalyzerController extends Controller
             $description = null;
             $generator = null;
             $viewport = null;
+            $openGraph = 0;
 
             foreach ($metas as $meta) {
-                if ($meta->getAttribute('name') == 'description') {
+                if (strtolower($meta->getAttribute('name')) == 'description') {
                     $description = $meta->getAttribute('content');
                 }
-                if ($meta->getAttribute('name') == 'generator') {
+                if (strtolower($meta->getAttribute('name')) == 'generator') {
                     $generator = $meta->getAttribute('content');
                 }
-                if ($meta->getAttribute('name') == 'viewport') {
+                if (strtolower($meta->getAttribute('name')) == 'viewport') {
                     $viewport = $meta->getAttribute('content');
+                }
+                if (stripos($meta->getAttribute('property'), 'og:') === 0) {
+                    $openGraph++;
+                }
+            }
+
+            $canonical = null;
+            foreach ($dom->getElementsByTagName('link') as $link) {
+                if (strtolower($link->getAttribute('rel')) === 'canonical') {
+                    $canonical = $link->getAttribute('href');
+                    break;
                 }
             }
 
             // Headings
             $h1Count = $dom->getElementsByTagName('h1')->length;
             $h2Count = $dom->getElementsByTagName('h2')->length;
+            $lang = $dom->getElementsByTagName('html')->item(0)?->getAttribute('lang');
 
             // Images Alt
             $images = $dom->getElementsByTagName('img');
@@ -141,6 +162,8 @@ class WebAnalyzerController extends Controller
                 'Meta Description' => ['passed' => !empty($description), 'val' => $description ? substr($description, 0, 50) . '...' : 'Missing'],
                 'H1 Heading' => ['passed' => $h1Count > 0, 'val' => $h1Count . ' found'],
                 'Image Alt text' => ['passed' => $imagesWithoutAlt === 0, 'val' => $imagesWithoutAlt . ' missing alt out of ' . $totalImages],
+                'Canonical URL' => ['passed' => !empty($canonical), 'val' => $canonical ? substr($canonical, 0, 60) : 'Missing'],
+                'Viewport Meta' => ['passed' => !empty($viewport), 'val' => $viewport ? 'Found' : 'Missing'],
             ];
 
             foreach ($seoChecks as $check) {
@@ -155,6 +178,10 @@ class WebAnalyzerController extends Controller
                 'description' => $description,
                 'h1_count' => $h1Count,
                 'h2_count' => $h2Count,
+                'viewport' => $viewport,
+                'canonical' => $canonical,
+                'open_graph_count' => $openGraph,
+                'lang' => $lang ?: 'Not set',
             ];
 
             // 4. Tech Stack (Simple Detection)
@@ -165,6 +192,23 @@ class WebAnalyzerController extends Controller
                 'Server' => $server,
                 'X-Powered-By' => $poweredBy,
                 'Generator' => $generator ?? 'Not Detected',
+            ];
+
+            $robotsUrl = rtrim(parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST), '/') . '/robots.txt';
+            $robotsStatus = null;
+            try {
+                $robotsStatus = Http::timeout(5)->get($robotsUrl)->status();
+            } catch (\Exception $e) {
+                $robotsStatus = 'unreachable';
+            }
+
+            $result['advanced'] = [
+                'compression' => $headerMap['content-encoding'] ?? 'Not detected',
+                'cache_control' => $headerMap['cache-control'] ?? 'Not set',
+                'robots_txt' => $robotsStatus,
+                'canonical' => $canonical ?: 'Not set',
+                'open_graph_tags' => $openGraph,
+                'language' => $lang ?: 'Not set',
             ];
 
             // 5. Recommendations
@@ -183,6 +227,9 @@ class WebAnalyzerController extends Controller
             if (empty($description)) $recommendations[] = 'Add a <meta name="description"> tag to improve click-through rates from search results.';
             if ($h1Count === 0) $recommendations[] = 'Add a main <h1> heading to structure your content hierarchy.';
             if ($imagesWithoutAlt > 0) $recommendations[] = 'Add "alt" attributes to ' . $imagesWithoutAlt . ' images to improve accessibility and SEO.';
+            if (empty($canonical)) $recommendations[] = 'Add a canonical link to reduce duplicate-content ambiguity.';
+            if (empty($viewport)) $recommendations[] = 'Add a viewport meta tag for better mobile rendering.';
+            if ($openGraph === 0) $recommendations[] = 'Add Open Graph meta tags so shared links have better previews.';
 
             // Security Recs
             if (!$securityChecks['Strict-Transport-Security']['passed']) $recommendations[] = 'Enable "Strict-Transport-Security" (HSTS) to enforce HTTPS connections.';
@@ -195,7 +242,6 @@ class WebAnalyzerController extends Controller
             // Final Score Cap
             $score = max(0, $score);
             $result['overall_score'] = $score;
-            $result['url'] = $url;
             $result['url'] = $url;
             $result['timestamp'] = date('Y-m-d H:i:s');
 

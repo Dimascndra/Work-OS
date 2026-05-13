@@ -14,7 +14,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg font-weight-bolder btn-block py-4">
-                        Scan Website <i class="flaticon-search ml-2"></i>
+                        Scan Website <i class="flaticon2-search-1 ml-2"></i>
                     </button>
                 </form>
                 <div class="separator separator-border-dashed my-5"></div>
@@ -23,7 +23,7 @@
                     <div class="card">
                         <div class="card-header" id="headingOne">
                             <div class="card-title collapsed" data-toggle="collapse" data-target="#collapseScoring">
-                                <i class="flaticon-interface-10"></i> Scoring Guide
+                                <i class="flaticon2-list-3"></i> Scoring Guide
                             </div>
                         </div>
                         <div id="collapseScoring" class="collapse" data-parent="#scoringAccordion">

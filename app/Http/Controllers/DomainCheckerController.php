@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SecurityToolHelper;
 use Illuminate\Http\Request;
 
 class DomainCheckerController extends Controller
@@ -17,11 +18,10 @@ class DomainCheckerController extends Controller
             'domain' => 'required|string',
         ]);
 
-        $domain = $request->input('domain');
-        // Cleanup
-        $domain = preg_replace('#^https?://#', '', $domain);
-        $domain = rtrim($domain, '/');
-        $domain = strtolower($domain);
+        $domain = SecurityToolHelper::normalizeDomain($request->input('domain'));
+        if (!$domain) {
+            return back()->withErrors(['domain' => 'Domain tidak valid.'])->withInput();
+        }
 
         // 1. Availability Check (Simple DNS Check)
         // If it has NS or A records, it's definitely registered.
@@ -30,10 +30,19 @@ class DomainCheckerController extends Controller
 
         // 2. Whois Lookup
         $whoisText = $this->queryWhois($domain);
+        $whoisSummary = $this->parseWhois($whoisText);
+        $dnsSummary = [
+            'ns' => $this->safeDnsRecords($domain, DNS_NS),
+            'a' => $this->safeDnsRecords($domain, DNS_A),
+            'aaaa' => $this->safeDnsRecords($domain, DNS_AAAA),
+            'mx' => $this->safeDnsRecords($domain, DNS_MX),
+        ];
 
         $res = [
             'domain' => $domain,
             'is_registered' => $isRegistered,
+            'whois_summary' => $whoisSummary,
+            'dns_summary' => $dnsSummary,
             'whois' => $whoisText
         ];
 
@@ -91,5 +100,36 @@ class DomainCheckerController extends Controller
         ];
 
         return $servers[$tld] ?? 'whois.iana.org';
+    }
+
+    private function parseWhois(string $whois): array
+    {
+        $fields = [
+            'registrar' => '/Registrar:\s*(.+)/i',
+            'created' => '/(?:Creation Date|Created On|Created):\s*(.+)/i',
+            'updated' => '/(?:Updated Date|Last Updated On|Updated):\s*(.+)/i',
+            'expires' => '/(?:Registry Expiry Date|Expiration Date|Expiry Date|Expires On):\s*(.+)/i',
+            'status' => '/Domain Status:\s*(.+)/i',
+            'name_server' => '/Name Server:\s*(.+)/i',
+        ];
+
+        $summary = [];
+        foreach ($fields as $key => $pattern) {
+            if (preg_match_all($pattern, $whois, $matches)) {
+                $values = array_values(array_unique(array_map('trim', $matches[1])));
+                $summary[$key] = $key === 'name_server' || $key === 'status' ? $values : ($values[0] ?? null);
+            }
+        }
+
+        return $summary;
+    }
+
+    private function safeDnsRecords(string $domain, int $type): array
+    {
+        try {
+            return dns_get_record($domain, $type) ?: [];
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }

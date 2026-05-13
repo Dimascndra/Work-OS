@@ -53,7 +53,10 @@
     </div> <!-- End Input Row -->
 
     <div class="row" id="resultContainer">
-        @include('pages.dns-checker._result', ['res' => session('dns_results')])
+        @include('pages.dns-checker._result', [
+            'res' => session('dns_results'),
+            'summary' => session('dns_summary'),
+        ])
     </div>
 </x-public-layout>
 

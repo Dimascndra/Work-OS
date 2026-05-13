@@ -14,14 +14,14 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg font-weight-bolder btn-block py-4">
-                        Find Subdomains <i class="flaticon-search ml-2"></i>
+                        Find Subdomains <i class="flaticon2-search-1 ml-2"></i>
                     </button>
                 </form>
                 <div class="separator separator-border-dashed my-5"></div>
                 <div class="d-flex align-items-center">
                     <div class="symbol symbol-40 symbol-light-primary mr-3">
                         <span class="symbol-label font-size-h4 font-weight-bold">
-                            <i class="flaticon-network text-primary"></i>
+                            <i class="flaticon2-world text-primary"></i>
                         </span>
                     </div>
                     <div>

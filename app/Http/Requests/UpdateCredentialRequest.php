@@ -18,7 +18,7 @@ class UpdateCredentialRequest extends FormRequest
             'service_name' => 'required|string',
             'url' => 'nullable|url',
             'username' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'nullable|string',
             'notes' => 'nullable|string',
         ];
     }

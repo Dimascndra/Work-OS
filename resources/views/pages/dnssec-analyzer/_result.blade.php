@@ -14,7 +14,7 @@
                                 @if ($zone['status'] === 'success')
                                     <i class="flaticon2-check-mark text-success"></i>
                                 @else
-                                    <i class="flaticon-warning-sign text-warning"></i>
+                                    <i class="flaticon2-warning text-warning"></i>
                                 @endif
                             </div>
                             <div class="timeline-content">

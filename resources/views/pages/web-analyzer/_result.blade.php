@@ -17,7 +17,7 @@
             <x-card class="card-stretch gutter-b">
                 <div class="d-flex align-items-center mb-5">
                     <div class="symbol symbol-40 symbol-light-primary mr-3">
-                        <span class="symbol-label"><i class="flaticon-stopwatch text-primary"></i></span>
+                        <span class="symbol-label"><i class="flaticon2-time text-primary"></i></span>
                     </div>
                     <div class="d-flex flex-column">
                         <div class="text-dark-75 font-weight-bold font-size-lg">Performance</div>
@@ -40,7 +40,7 @@
             <x-card class="card-stretch gutter-b">
                 <div class="d-flex align-items-center mb-5">
                     <div class="symbol symbol-40 symbol-light-info mr-3">
-                        <span class="symbol-label"><i class="flaticon-search text-info"></i></span>
+                        <span class="symbol-label"><i class="flaticon2-search text-info"></i></span>
                     </div>
                     <div class="d-flex flex-column">
                         <div class="text-dark-75 font-weight-bold font-size-lg">SEO stats</div>
@@ -158,6 +158,41 @@
         </div>
     </div>
 
+    @if (!empty($res['advanced']))
+        <div class="row">
+            <div class="col-lg-12">
+                <x-card title="Advanced Signals" class="card-stretch gutter-b" :toolbar="false">
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <span class="text-muted font-weight-bold d-block">Compression</span>
+                            <span class="text-dark font-weight-bolder">{{ $res['advanced']['compression'] }}</span>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <span class="text-muted font-weight-bold d-block">Cache-Control</span>
+                            <span class="text-dark font-weight-bolder">{{ Str::limit($res['advanced']['cache_control'], 45) }}</span>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <span class="text-muted font-weight-bold d-block">robots.txt</span>
+                            <span class="text-dark font-weight-bolder">{{ $res['advanced']['robots_txt'] }}</span>
+                        </div>
+                        <div class="col-md-4 mb-4 mb-md-0">
+                            <span class="text-muted font-weight-bold d-block">Canonical</span>
+                            <span class="text-dark font-weight-bolder">{{ Str::limit($res['advanced']['canonical'], 45) }}</span>
+                        </div>
+                        <div class="col-md-4 mb-4 mb-md-0">
+                            <span class="text-muted font-weight-bold d-block">Open Graph</span>
+                            <span class="text-dark font-weight-bolder">{{ $res['advanced']['open_graph_tags'] }} tag</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="text-muted font-weight-bold d-block">Language</span>
+                            <span class="text-dark font-weight-bolder">{{ $res['advanced']['language'] }}</span>
+                        </div>
+                    </div>
+                </x-card>
+            </div>
+        </div>
+    @endif
+
     <!-- Recommendations Row -->
     <div class="row">
         <div class="col-lg-12">
@@ -206,7 +241,7 @@
     </div>
 @elseif(isset($error))
     <div class="alert alert-custom alert-light-danger fade show mb-5" role="alert">
-        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-icon"><i class="flaticon2-warning"></i></div>
         <div class="alert-text">{{ $error }}</div>
         <div class="alert-close">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

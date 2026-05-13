@@ -21,7 +21,7 @@
                         required value="{{ old('url') }}">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary font-weight-bold px-10">
-                            Analyze <i class="flaticon-search ml-2"></i>
+                            Analyze <i class="flaticon2-search-1 ml-2"></i>
                         </button>
                     </div>
                 </div>

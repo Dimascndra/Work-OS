@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Credential;
 use Illuminate\Database\Eloquent\Collection;
-# use Illuminate\Support\Facades\Crypt; // If encryption needed later, current controller doesn't use it explicitly for display but standard practice usually does. However, sticking to "same as existing".
 
 class CredentialService
 {
@@ -20,6 +19,10 @@ class CredentialService
 
     public function update(Credential $credential, array $data): Credential
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
         $credential->update($data);
         return $credential->refresh();
     }

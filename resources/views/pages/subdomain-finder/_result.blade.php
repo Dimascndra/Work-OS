@@ -4,6 +4,8 @@
         <div class="d-flex align-items-center justify-content-between mb-5">
             <span class="font-weight-bolder font-size-h5 text-dark-75">
                 Found {{ $res['count'] }} unique subdomains
+                <span class="label label-light-success label-inline font-weight-bold ml-2">{{ $res['resolved_count'] ?? 0 }} resolved</span>
+                <span class="label label-light-info label-inline font-weight-bold ml-2">{{ $res['source_count'] ?? 0 }} sources</span>
             </span>
             <a href="https://crt.sh/?q={{ $res['domain'] }}" target="_blank"
                 class="btn btn-light-primary btn-sm font-weight-bold">
@@ -20,6 +22,7 @@
                             </th>
                             <th style="min-width: 250px">Subdomain</th>
                             <th style="min-width: 150px">IP</th>
+                            <th style="min-width: 180px">DNS Detail</th>
                             <th style="min-width: 250px">Provider</th>
                             <th style="min-width: 100px">Action</th>
                         </tr>
@@ -41,6 +44,17 @@
                                 <td>
                                     <span class="text-dark-75 font-weight-bold d-block font-size-lg">
                                         {{ $item['ip'] ?? 'Not Resolved' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted font-weight-bold d-block font-size-sm">
+                                        AAAA: {{ $item['aaaa'] ?? '-' }}
+                                    </span>
+                                    <span class="text-muted font-weight-bold d-block font-size-sm">
+                                        CNAME: {{ Str::limit($item['cname'] ?? '-', 28) }}
+                                    </span>
+                                    <span class="label label-light-primary label-inline font-weight-bold mt-1">
+                                        {{ implode(', ', $item['sources'] ?? ['Public records']) }}
                                     </span>
                                 </td>
                                 <td>
@@ -66,7 +80,7 @@
             </div>
         @else
             <div class="alert alert-custom alert-light-warning fade show mb-5" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                <div class="alert-icon"><i class="flaticon2-warning"></i></div>
                 <div class="alert-text font-weight-bold">
                     No subdomains found for this domain in public records.
                 </div>
@@ -77,7 +91,7 @@
 @elseif(isset($error))
     <x-card title="❌ Error" class="card-stretch gutter-b bg-light-danger">
         <div class="d-flex flex-column align-items-center text-center p-5">
-            <i class="flaticon-exclamation-2 icon-4x text-danger mb-4"></i>
+            <i class="flaticon2-warning icon-4x text-danger mb-4"></i>
             <h4 class="font-weight-bold text-danger">{{ $error }}</h4>
         </div>
     </x-card>
@@ -86,7 +100,7 @@
         <div class="d-flex flex-column align-items-center justify-content-center h-100 min-h-300px text-center">
             <div class="symbol symbol-100 symbol-light-primary mb-5">
                 <span class="symbol-label">
-                    <i class="flaticon-globe icon-4x text-primary"></i>
+                    <i class="flaticon2-world icon-4x text-primary"></i>
                 </span>
             </div>
             <h4 class="font-weight-bolder text-dark">Enter a domain to scan</h4>

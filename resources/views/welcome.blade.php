@@ -3,9 +3,9 @@
         <div class="col-12 mb-8">
             <div class="card card-custom bg-transparent shadow-none border-0">
                 <div class="card-body p-0">
-                    <h1 class="font-weight-bolder text-dark font-size-h1 mb-2">Welcome to Work-OS Security Tools</h1>
-                    <p class="text-dark-50 font-size-lg text-muted">A collection of secure tools for developers and
-                        system administrators.</p>
+                    <h1 class="font-weight-bolder text-dark font-size-h1 mb-2">Selamat Datang di Alat Keamanan Work-OS</h1>
+                    <p class="text-dark-50 font-size-lg text-muted">Kumpulan alat keamanan untuk developer dan
+                        administrator sistem.</p>
                 </div>
             </div>
         </div>
@@ -26,13 +26,13 @@
                         <div class="d-flex flex-column">
                             <a href="{{ route('web-analyzer.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                Web Analyzer
+                                Penganalisis Web
                             </a>
-                            <span class="text-muted font-weight-bold">Tech Stack</span>
+                            <span class="text-muted font-weight-bold">Teknologi Web</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Identify technologies framework, and server used by websites.
+                        Identifikasi teknologi, framework, dan server yang digunakan oleh website.
                     </p>
                 </div>
             </div>
@@ -45,19 +45,19 @@
                     <div class="d-flex align-items-center mb-5">
                         <span class="symbol symbol-60 symbol-light-danger mr-5">
                             <span class="symbol-label">
-                                <i class="flaticon-safe-shield-protection text-danger font-size-h1"></i>
+                                <i class="flaticon2-protection text-danger font-size-h1"></i>
                             </span>
                         </span>
                         <div class="d-flex flex-column">
                             <a href="{{ route('vuln-scanner.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                Vuln Scanner
+                                Pemindai Kerentanan
                             </a>
-                            <span class="text-muted font-weight-bold">Web Vulnerability Scan</span>
+                            <span class="text-muted font-weight-bold">Pemindaian Kerentanan Web</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Detect common security vulnerabilities in your web applications.
+                        Deteksi kerentanan keamanan umum pada aplikasi web Anda.
                     </p>
                 </div>
             </div>
@@ -70,19 +70,19 @@
                     <div class="d-flex align-items-center mb-5">
                         <span class="symbol symbol-60 symbol-light-primary mr-5">
                             <span class="symbol-label">
-                                <i class="flaticon-search text-primary font-size-h1"></i>
+                                <i class="flaticon2-search-1 text-primary font-size-h1"></i>
                             </span>
                         </span>
                         <div class="d-flex flex-column">
                             <a href="{{ route('subdomain-finder.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                Subdomain Finder
+                                Pencari Subdomain
                             </a>
-                            <span class="text-muted font-weight-bold">Reconnaissance Tool</span>
+                            <span class="text-muted font-weight-bold">Alat Rekonesans</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Discover subdomains for any target domain instantly.
+                        Temukan subdomain untuk domain target secara instan.
                     </p>
                 </div>
             </div>
@@ -101,13 +101,13 @@
                         <div class="d-flex flex-column">
                             <a href="{{ route('dns-checker.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                DNS Checker
+                                Pemeriksa DNS
                             </a>
-                            <span class="text-muted font-weight-bold">Global Propagation</span>
+                            <span class="text-muted font-weight-bold">Propagasi Global</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Check DNS propagation across multiple global nameservers.
+                        Periksa propagasi DNS di berbagai nameserver global.
                     </p>
                 </div>
             </div>
@@ -120,19 +120,19 @@
                     <div class="d-flex align-items-center mb-5">
                         <span class="symbol symbol-60 symbol-light-success mr-5">
                             <span class="symbol-label">
-                                <i class="flaticon-lock text-success font-size-h1"></i>
+                                <i class="flaticon2-lock text-success font-size-h1"></i>
                             </span>
                         </span>
                         <div class="d-flex flex-column">
                             <a href="{{ route('ssl-checker.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                SSL Checker
+                                Pemeriksa SSL
                             </a>
-                            <span class="text-muted font-weight-bold">Certificate Status</span>
+                            <span class="text-muted font-weight-bold">Status Sertifikat</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Verify SSL certificate validity, expiry, and chain issues.
+                        Verifikasi validitas, masa berlaku, dan masalah rantai sertifikat SSL.
                     </p>
                 </div>
             </div>
@@ -151,13 +151,13 @@
                         <div class="d-flex flex-column">
                             <a href="{{ route('dnssec-analyzer.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                DNSSEC Analyzer
+                                Penganalisis DNSSEC
                             </a>
-                            <span class="text-muted font-weight-bold">Security Extensions</span>
+                            <span class="text-muted font-weight-bold">Ekstensi Keamanan</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Analyze DNSSEC configuration and chain of trust.
+                        Analisis konfigurasi DNSSEC dan chain of trust.
                     </p>
                 </div>
             </div>
@@ -170,19 +170,19 @@
                     <div class="d-flex align-items-center mb-5">
                         <span class="symbol symbol-60 symbol-light-dark mr-5">
                             <span class="symbol-label">
-                                <i class="flaticon-search text-dark font-size-h1"></i>
+                                <i class="flaticon2-search text-dark font-size-h1"></i>
                             </span>
                         </span>
                         <div class="d-flex flex-column">
                             <a href="{{ route('domain-checker.index') }}"
                                 class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-1">
-                                Domain Whois
+                                WHOIS Domain
                             </a>
-                            <span class="text-muted font-weight-bold">Registration Data</span>
+                            <span class="text-muted font-weight-bold">Data Registrasi</span>
                         </div>
                     </div>
                     <p class="text-dark-75 font-weight-nomal mb-5">
-                        Retrieve registration and ownership details for any domain.
+                        Ambil detail registrasi dan kepemilikan untuk domain apa pun.
                     </p>
                 </div>
             </div>

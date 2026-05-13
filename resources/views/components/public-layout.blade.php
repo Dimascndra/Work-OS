@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ $title ?? 'Work OS' }} | Security Tools</title>
+    <title>{{ $title ?? 'Work OS' }} | Alat Keamanan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -53,19 +53,19 @@
             <div class="container-fluid px-5 d-flex align-items-center justify-content-between">
                 <a href="{{ url('/') }}" class="text-dark font-weight-bold font-size-h4 text-hover-primary mr-5">
                     <i class="flaticon2-shield text-primary mr-2"></i> Work-OS <span
-                        class="text-muted font-weight-normal">Security Tools</span>
+                        class="text-muted font-weight-normal">Alat Keamanan</span>
                 </a>
 
                 <div>
                     @auth
                         <a href="{{ route('dashboard') }}"
-                            class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dashboard</a>
+                            class="btn btn-sm btn-light-primary font-weight-bold mr-2">Dasbor</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Logout</button>
+                            <button type="submit" class="btn btn-sm btn-light-danger font-weight-bold">Keluar</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-sm btn-light-primary font-weight-bold">Login</a>
+                        <a href="{{ route('login') }}" class="btn btn-sm btn-light-primary font-weight-bold">Masuk</a>
                     @endauth
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <div class="col-lg-2 mb-5 mb-lg-0">
                         <div class="card card-custom gutter-b sticky-sidebar">
                             <div class="card-header border-0 pb-0">
-                                <h3 class="card-title font-weight-bolder text-dark">Tools Menu</h3>
+                                <h3 class="card-title font-weight-bolder text-dark">Menu Alat</h3>
                             </div>
                             <div class="card-body pt-2">
                                 <div class="navi navi-bold navi-hover navi-active navi-link-rounded">
@@ -86,18 +86,18 @@
                                         <a href="{{ route('vuln-scanner.index') }}"
                                             class="navi-link py-4 {{ request()->routeIs('vuln-scanner.*') ? 'active' : '' }}">
                                             <span class="navi-icon mr-2">
-                                                <i class="flaticon-safe-shield-protection"></i>
+                                                <i class="flaticon2-protection"></i>
                                             </span>
-                                            <span class="navi-text font-size-lg">Vuln Scanner</span>
+                                            <span class="navi-text font-size-lg">Pemindai Kerentanan</span>
                                         </a>
                                     </div>
                                     <div class="navi-item mb-2">
                                         <a href="{{ route('subdomain-finder.index') }}"
                                             class="navi-link py-4 {{ request()->routeIs('subdomain-finder.*') ? 'active' : '' }}">
                                             <span class="navi-icon mr-2">
-                                                <i class="flaticon-search"></i>
+                                                <i class="flaticon2-search-1"></i>
                                             </span>
-                                            <span class="navi-text font-size-lg">Subdomain Finder</span>
+                                            <span class="navi-text font-size-lg">Pencari Subdomain</span>
                                         </a>
                                     </div>
                                     <div class="navi-item mb-2">
@@ -106,16 +106,16 @@
                                             <span class="navi-icon mr-2">
                                                 <i class="flaticon2-world"></i>
                                             </span>
-                                            <span class="navi-text font-size-lg">DNS Checker</span>
+                                            <span class="navi-text font-size-lg">Pemeriksa DNS</span>
                                         </a>
                                     </div>
                                     <div class="navi-item mb-2">
                                         <a href="{{ route('ssl-checker.index') }}"
                                             class="navi-link py-4 {{ request()->routeIs('ssl-checker.*') ? 'active' : '' }}">
                                             <span class="navi-icon mr-2">
-                                                <i class="flaticon-lock"></i>
+                                                <i class="flaticon2-lock"></i>
                                             </span>
-                                            <span class="navi-text font-size-lg">SSL Checker</span>
+                                            <span class="navi-text font-size-lg">Pemeriksa SSL</span>
                                         </a>
                                     </div>
                                     <div class="navi-item mb-2">
@@ -124,7 +124,7 @@
                                             <span class="navi-icon mr-2">
                                                 <i class="flaticon2-shield"></i>
                                             </span>
-                                            <span class="navi-text font-size-lg">DNSSEC Analyzer</span>
+                                            <span class="navi-text font-size-lg">Penganalisis DNSSEC</span>
                                         </a>
                                     </div>
                                     <div class="navi-item mb-2">
@@ -134,10 +134,10 @@
                                                 <span class="symbol symbol-30 mr-2">
                                                     <span class="symbol-label bg-transparent">
                                                         <i
-                                                            class="flaticon-search {{ request()->routeIs('domain-checker.*') ? 'text-white' : 'text-dark-50' }}"></i>
+                                                            class="flaticon2-search {{ request()->routeIs('domain-checker.*') ? 'text-white' : 'text-dark-50' }}"></i>
                                                     </span>
                                                 </span>
-                                                <span class="font-weight-bold">Domain Whois</span>
+                                                <span class="font-weight-bold">WHOIS Domain</span>
                                             </div>
                                         </a>
 
@@ -150,7 +150,7 @@
                                                             class="flaticon2-browser-2 {{ request()->routeIs('web-analyzer.*') ? 'text-white' : 'text-dark-50' }}"></i>
                                                     </span>
                                                 </span>
-                                                <span class="font-weight-bold">Web Analyzer</span>
+                                                <span class="font-weight-bold">Penganalisis Web</span>
                                             </div>
                                         </a>
                                     </div>
@@ -169,7 +169,7 @@
 
         <!-- Simple Footer -->
         <div class="py-4 text-center text-muted font-weight-bold">
-            {{ date('Y') }} &copy; Work-OS Security Team
+            {{ date('Y') }} &copy; Tim Keamanan Work-OS
         </div>
     </div>
 
