@@ -6,6 +6,47 @@
             </a>
         </x-slot:toolbar>
 
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="ki ki-check-circle mr-2"></i> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        {{-- Realtime Filter --}}
+        <div class="d-flex align-items-center flex-wrap mb-5" style="gap: 12px;">
+            {{-- Search --}}
+            <div class="input-icon flex-grow-1" style="min-width: 220px;">
+                <input type="text" id="credential-search" class="form-control form-control-solid"
+                    placeholder="Search service, username, notes..." />
+                <span><i class="flaticon2-search-1 text-muted"></i></span>
+            </div>
+            {{-- Filter by Service --}}
+            <div style="min-width: 200px;">
+                <select id="credential-service-filter" class="form-control form-control-solid select2"
+                    style="width:100%">
+                    <option value="">All Services</option>
+                    @foreach ($credentials->pluck('service_name')->unique()->sort() as $svc)
+                        <option value="{{ strtolower($svc) }}">{{ $svc }}</option>
+                    @endforeach
+                </select>
+            </div>
+            {{-- Filter by Category --}}
+            <div style="min-width: 180px;">
+                <select id="credential-category-filter" class="form-control form-control-solid select2"
+                    style="width:100%">
+                    <option value="">All Categories</option>
+                    <option value="personal">Personal</option>
+                    <option value="dev">Development</option>
+                    <option value="social">Social Media</option>
+                    <option value="banking">Banking</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_1">
                 <thead>
@@ -33,7 +74,10 @@
                             $password = $credential->password;
                             $passwordAvailable = $credential->passwordIsDecryptable() && filled($password);
                         @endphp
-                        <tr>
+                        <tr class="credential-row" data-service="{{ strtolower($credential->service_name) }}"
+                            data-username="{{ strtolower($credential->username) }}"
+                            data-notes="{{ strtolower($credential->notes) }}"
+                            data-category="{{ $credential->category }}">
                             <td class="pl-0">
                                 <div class="d-flex align-items-center">
                                     @if ($credential->url)
@@ -47,10 +91,10 @@
                                         </span>
                                     @endif
                                     <div>
-                                        <a href="#"
-                                            class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ $credential->service_name }}</a>
-                                        <span
-                                            class="text-muted font-weight-bold text-muted d-block font-size-sm">{{ $credential->url }}</span>
+                                        <a href="{{ $credential->url }}"
+                                            class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ $credential->service_name }}
+                                            <span
+                                                class="text-muted font-weight-bold text-muted d-block font-size-sm">{{ $credential->url }}</span></a>
                                     </div>
                                 </div>
                             </td>
@@ -117,6 +161,11 @@
                             <td colspan="5" class="text-center text-muted">No credentials found</td>
                         </tr>
                     @endforelse
+                    <tr id="no-filter-results" style="display:none;">
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="flaticon2-search-1 mr-2"></i>No credentials match your search.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -124,34 +173,65 @@
 
     @push('scripts')
         <script>
-            // Initialize Clipboard.js
             $(function() {
                 // Initialize Clipboard.js
                 var clipboard = new ClipboardJS('.btn-copy');
-
                 clipboard.on('success', function(e) {
                     var btn = $(e.trigger);
-                    var originalTitle = btn.attr('title');
-
-                    // Visual feedback
                     btn.addClass('btn-success').removeClass('btn-light');
-                    btn.find('i, svg').addClass('text-white'); // Ensure icon is visible if needed
-
-                    // Show tooltip or feedback
+                    btn.find('i, svg').addClass('text-white');
                     if (typeof toastr !== 'undefined') {
                         toastr.success('Password copied to clipboard!');
-                    } else {
-                        // Fallback if toastr is not available
-                        // You might want to use a tooltip update here instead
                     }
-
-                    // Reset button after 2 seconds
                     setTimeout(function() {
                         btn.removeClass('btn-success').addClass('btn-light');
                         btn.find('i, svg').removeClass('text-white');
                         e.clearSelection();
                     }, 2000);
                 });
+
+                // Initialize Select2
+                $('#credential-service-filter').select2({
+                    placeholder: 'All Services',
+                    allowClear: true
+                });
+                $('#credential-category-filter').select2({
+                    placeholder: 'All Categories',
+                    allowClear: true
+                });
+
+                // Realtime Filter
+                function applyFilters() {
+                    var search = $('#credential-search').val().toLowerCase().trim();
+                    var service = $('#credential-service-filter').val() || '';
+                    var category = $('#credential-category-filter').val() || '';
+                    var visibleCount = 0;
+
+                    $('.credential-row').each(function() {
+                        var rowService = $(this).data('service') || '';
+                        var rowUsername = $(this).data('username') || '';
+                        var rowNotes = $(this).data('notes') || '';
+                        var rowCat = $(this).data('category') || '';
+
+                        var matchSearch = !search || rowService.includes(search) || rowUsername.includes(
+                            search) || rowNotes.includes(search);
+                        var matchService = !service || rowService === service;
+                        var matchCategory = !category || rowCat === category;
+
+                        if (matchSearch && matchService && matchCategory) {
+                            $(this).show();
+                            visibleCount++;
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+
+                    $('#no-filter-results').toggle(visibleCount === 0);
+                }
+
+                $('#credential-search').on('keyup input', applyFilters);
+                // Select2 fires 'change' on select/clear
+                $('#credential-service-filter, #credential-category-filter').on('change', applyFilters);
             });
         </script>
     @endpush

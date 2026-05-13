@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('domain_monitors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('server_id')->nullable()->constrained()->nullOnDelete();
             $table->string('domain_url');
             $table->dateTime('ssl_expires_at')->nullable();
             $table->dateTime('domain_expires_at')->nullable();

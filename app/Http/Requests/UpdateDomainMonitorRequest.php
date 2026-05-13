@@ -14,9 +14,8 @@ class UpdateDomainMonitorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'server_id' => 'nullable|exists:servers,id',
             'domain_url' => 'required|url',
-            'status' => 'required|in:healthy,down,warning',
+            'status'     => 'required|in:healthy,down,warning',
         ];
     }
 }
