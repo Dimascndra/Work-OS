@@ -34,6 +34,9 @@ Route::post('/domain-checker', [App\Http\Controllers\DomainCheckerController::cl
 Route::get('/web-analyzer', [App\Http\Controllers\WebAnalyzerController::class, 'index'])->name('web-analyzer.index');
 Route::post('/web-analyzer', [App\Http\Controllers\WebAnalyzerController::class, 'analyze'])->middleware('throttle:10,1')->name('web-analyzer.analyze');
 
+Route::get('/port-scanner', [App\Http\Controllers\PortScannerController::class, 'index'])->name('port-scanner.index');
+Route::post('/port-scanner', [App\Http\Controllers\PortScannerController::class, 'scan'])->middleware('throttle:10,1')->name('port-scanner.scan');
+
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

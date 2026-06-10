@@ -12,10 +12,10 @@
 
     <div class="row">
         <!-- Input Section -->
-        <div class="col-12 mb-5">
+        <div class="col-lg-8 mb-5">
             <x-card class="card-stretch gutter-b">
-                <div class="d-flex align-items-center justify-content-between flex-wrap">
-                    <div class="d-flex align-items-center mr-5 mb-2">
+                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between w-100">
+                    <div class="d-flex align-items-center mr-5 mb-4 mb-md-0">
                         <div class="symbol symbol-50 symbol-light-primary mr-4">
                             <span class="symbol-label">
                                 <i class="flaticon2-world icon-lg text-primary"></i>
@@ -23,16 +23,16 @@
                         </div>
                         <div>
                             <h3 class="font-weight-bolder text-dark mb-0">Global DNS Checker</h3>
-                            <span class="text-muted font-weight-bold">Check propagation across multiple servers</span>
+                            <span class="text-muted font-weight-bold">Periksa propagasi rekaman DNS secara global</span>
                         </div>
                     </div>
 
-                    <form action="{{ route('dns-checker.check') }}" method="POST" id="scanForm"
-                        class="d-flex align-items-center flex-grow-1 header-search">
+                    <form action="{{ route('dns-checker.check') }}" method="POST" id="scanForm" data-loading-message="Memeriksa propagasi DNS..." data-loading-btn="Memeriksa..."
+                        class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center flex-grow-1 w-100 header-search">
                         @csrf
-                        <div class="input-group input-group-lg input-group-solid flex-grow-1 mr-3">
+                        <div class="input-group input-group-lg input-group-solid flex-grow-1 mr-0 mr-sm-3 mb-3 mb-sm-0">
                             <input type="text" name="domain" class="form-control pl-5"
-                                placeholder="Enter domain (e.g. google.com)" required value="{{ old('domain') }}">
+                                placeholder="Masukkan domain (contoh: google.com)" required value="{{ old('domain') }}">
                             <div class="input-group-append">
                                 <select name="type" class="form-control form-control-solid bg-light border-0"
                                     style="width: 100px;">
@@ -43,10 +43,28 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg font-weight-bolder px-5">
-                            Search
+                        <button type="submit" class="btn btn-primary btn-lg font-weight-bolder px-5 w-100 w-sm-auto">
+                            Cari
                         </button>
                     </form>
+                </div>
+            </x-card>
+        </div>
+
+        <div class="col-lg-4 mb-5">
+            <x-card title="ℹ️ Tentang Alat" class="card-stretch gutter-b shadow-sm">
+                <div class="text-dark-75 font-size-sm">
+                    <h6 class="font-weight-bolder mb-2 text-primary">Deskripsi Fungsi:</h6>
+                    <p class="text-muted mb-3">Memeriksa penyebaran rekaman DNS (DNS Propagation) situs Anda di server DNS global di seluruh dunia secara real-time.</p>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Cara Penggunaan:</h6>
+                    <ol class="text-muted mb-3 pl-4">
+                        <li>Masukkan domain utama & pilih tipe rekaman DNS (A, MX, CNAME, dll.).</li>
+                        <li>Klik <strong>Cari</strong> untuk mendeteksi penyebaran.</li>
+                    </ol>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Penjelasan Hasil:</h6>
+                    <p class="text-muted mb-0">Peta dunia interaktif dan tabel status resolusi DNS per lokasi global. Status centang hijau menandakan rekaman DNS sudah terpropagasi sempurna.</p>
                 </div>
             </x-card>
         </div>
@@ -146,69 +164,6 @@
         @if (session('dns_results'))
             initDnsMap(@json(session('dns_results')));
         @endif
-
-        // AJAX Handler
-        document.addEventListener('DOMContentLoaded', function() {
-            var form = document.getElementById('scanForm');
-            if (!form) return;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                var form = this;
-                var url = form.action;
-                var formData = new FormData(form);
-                var resultContainer = document.getElementById('resultContainer');
-
-                KTApp.block(document.body, {
-                    overlayColor: '#000000',
-                    state: 'primary',
-                    message: 'Propagating across the globe...',
-                    opacity: 0.3
-                });
-
-                var btn = form.querySelector('button[type="submit"]');
-                var originalBtnHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="spinner spinner-white spinner-right pr-4"></i> Searching...';
-                btn.disabled = true;
-
-                fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute(
-                                    'content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        KTApp.unblock(document.body);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-
-                        if (data.html) {
-                            resultContainer.innerHTML = data.html;
-                        }
-
-                        if (data.results) {
-                            initDnsMap(data.results);
-                        }
-
-                        // Scroll to result
-                        resultContainer.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    })
-                    .catch(error => {
-                        KTApp.unblock(document.body);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-                        console.error('Error:', error);
-                        toastr.error('An error occurred during the check.');
-                    });
-            });
-        });
+        window.initDnsMap = initDnsMap;
     </script>
 @endpush

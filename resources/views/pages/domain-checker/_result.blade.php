@@ -1,5 +1,5 @@
 @if (isset($res))
-    <x-card title="📊 Result for {{ $res['domain'] }}" class="card-stretch gutter-b">
+    <x-card title="📊 Hasil untuk {{ $res['domain'] }}" class="card-stretch gutter-b">
         <!-- Status Header -->
         <div class="d-flex flex-column align-items-center mb-10">
             @if ($res['is_registered'])
@@ -8,16 +8,16 @@
                         <i class="flaticon2-cross icon-4x text-danger"></i>
                     </span>
                 </div>
-                <h3 class="font-weight-bolder text-danger mt-4">Domain is Taken</h3>
-                <p class="text-dark-50 font-weight-bold">Registered / Active</p>
+                <h3 class="font-weight-bolder text-danger mt-4">Domain Sudah Terdaftar</h3>
+                <p class="text-dark-50 font-weight-bold">Terdaftar / Aktif</p>
             @else
                 <div class="symbol symbol-100 symbol-circle symbol-light-success">
                     <span class="symbol-label">
                         <i class="flaticon2-check-mark icon-4x text-success"></i>
                     </span>
                 </div>
-                <h3 class="font-weight-bolder text-success mt-4">Likely Available</h3>
-                <p class="text-dark-50 font-weight-bold">No active DNS records found</p>
+                <h3 class="font-weight-bolder text-success mt-4">Kemungkinan Tersedia</h3>
+                <p class="text-dark-50 font-weight-bold">Tidak ada DNS record aktif yang ditemukan</p>
             @endif
         </div>
 
@@ -66,7 +66,7 @@
 
         <!-- Whois Data -->
         <div class="form-group">
-            <label class="font-weight-bolder">WHOIS Data:</label>
+            <label class="font-weight-bolder">Data WHOIS:</label>
             <textarea class="form-control form-control-solid font-family-monospace" rows="15" readonly>{{ $res['whois'] }}</textarea>
         </div>
     </x-card>
@@ -78,15 +78,15 @@
         </div>
     </x-card>
 @else
-    <x-card title="⏳ Waiting for Input" class="card-stretch gutter-b">
+    <x-card title="⏳ Menunggu Input" class="card-stretch gutter-b">
         <div class="d-flex flex-column align-items-center justify-content-center h-100 min-h-300px text-center">
             <div class="symbol symbol-100 symbol-light-info mb-5">
                 <span class="symbol-label">
                     <i class="flaticon2-search icon-4x text-info"></i>
                 </span>
             </div>
-            <h4 class="font-weight-bolder text-dark">Enter a domain to check</h4>
-            <p class="text-muted">Check availability and WHOIS details.</p>
+            <h4 class="font-weight-bolder text-dark">Masukkan domain untuk diperiksa</h4>
+            <p class="text-muted">Periksa ketersediaan dan detail WHOIS.</p>
         </div>
     </x-card>
 @endif

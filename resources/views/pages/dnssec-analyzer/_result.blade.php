@@ -2,7 +2,7 @@
     <div class="card card-custom gutter-b">
         <div class="card-header border-0 pt-5">
             <h3 class="card-title font-weight-bolder">
-                Analysis for <span class="text-primary ml-2">{{ $res['domain'] }}</span>
+                Analisis untuk <span class="text-primary ml-2">{{ $res['domain'] }}</span>
             </h3>
         </div>
         <div class="card-body">
@@ -24,7 +24,7 @@
                                             class="text-dark-75 text-hover-primary font-weight-bold font-size-h5">
                                             {{ $zone['zone'] }}
                                         </a>
-                                        <span class="text-muted ml-2">Zone Analysis</span>
+                                        <span class="text-muted ml-2">Analisis Zona</span>
                                     </div>
                                 </div>
 

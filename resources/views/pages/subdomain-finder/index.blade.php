@@ -2,8 +2,8 @@
     <div class="row">
         <!-- Input Section -->
         <div class="col-lg-4">
-            <x-card title="🔍 Subdomain Finder" class="card-stretch gutter-b">
-                <form action="{{ route('subdomain-finder.scan') }}" method="POST" id="scanForm">
+            <x-card title="🔍 Subdomain Finder" class="gutter-b shadow-sm">
+                <form action="{{ route('subdomain-finder.scan') }}" method="POST" id="scanForm" data-loading-message="Mencari subdomain..." data-loading-btn="Mencari...">
                     @csrf
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark">Target Domain <span
@@ -17,17 +17,22 @@
                         Find Subdomains <i class="flaticon2-search-1 ml-2"></i>
                     </button>
                 </form>
-                <div class="separator separator-border-dashed my-5"></div>
-                <div class="d-flex align-items-center">
-                    <div class="symbol symbol-40 symbol-light-primary mr-3">
-                        <span class="symbol-label font-size-h4 font-weight-bold">
-                            <i class="flaticon2-world text-primary"></i>
-                        </span>
-                    </div>
-                    <div>
-                        <div class="text-dark-75 font-weight-bold">Passive Reconnaissance</div>
-                        <div class="text-muted font-size-sm">Uses crt.sh logs. Safe & Non-intrusive.</div>
-                    </div>
+            </x-card>
+
+            <x-card title="ℹ️ Tentang Alat" class="gutter-b shadow-sm">
+                <div class="text-dark-75 font-size-sm">
+                    <h6 class="font-weight-bolder mb-2 text-primary">Deskripsi Fungsi:</h6>
+                    <p class="text-muted mb-4">Melacak subdomain aktif dari domain utama secara pasif dengan memanfaatkan log Certificate Transparency publik (crt.sh). Metode ini aman dan tanpa melakukan kontak langsung dengan server target.</p>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Cara Penggunaan:</h6>
+                    <ol class="text-muted mb-4 pl-4">
+                        <li>Masukkan domain utama (contoh: example.com).</li>
+                        <li>Klik tombol <strong>Find Subdomains</strong> untuk memulai pencarian.</li>
+                        <li>Sistem akan mengumpulkan dan menganalisis rekaman DNS dari log publik.</li>
+                    </ol>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Penjelasan Hasil:</h6>
+                    <p class="text-muted mb-0">Menampilkan jumlah subdomain aktif, alamat IP server, catatan DNS (AAAA/CNAME), penyedia hosting, dan lokasi geografis server untuk setiap subdomain yang terdeteksi.</p>
                 </div>
             </x-card>
         </div>
@@ -41,67 +46,3 @@
         </div>
     </div>
 </x-public-layout>
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var form = document.getElementById('scanForm');
-            if (!form) return;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                var url = form.action;
-                var formData = new FormData(form);
-                var resultContainer = document.getElementById('resultContainer');
-
-                // Block UI
-                KTApp.block(resultContainer, {
-                    overlayColor: '#000000',
-                    state: 'primary',
-                    message: 'Discovering Subdomains...',
-                    opacity: 0.3
-                });
-
-                // Disable button
-                var btn = form.querySelector('button[type="submit"]');
-                var originalBtnHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="spinner spinner-white spinner-right pr-4"></i> Documenting...';
-                btn.disabled = true;
-
-                fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute(
-                                    'content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        KTApp.unblock(resultContainer);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-
-                        if (data.html) {
-                            resultContainer.innerHTML = data.html;
-                        }
-
-                        // Scroll to result
-                        resultContainer.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    })
-                    .catch(error => {
-                        KTApp.unblock(resultContainer);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-                        console.error('Error:', error);
-                        toastr.error('An error occurred during the scan. Please try again.');
-                    });
-            });
-        });
-    </script>
-@endpush

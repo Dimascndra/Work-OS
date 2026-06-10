@@ -2,8 +2,8 @@
     <div class="row">
         <!-- Input Section -->
         <div class="col-lg-4">
-            <x-card title="🛡️ Vulnerability Scanner" class="card-stretch gutter-b">
-                <form action="{{ route('vuln-scanner.scan') }}" method="POST" id="scanForm">
+            <x-card title="🛡️ Vulnerability Scanner" class="gutter-b shadow-sm">
+                <form action="{{ route('vuln-scanner.scan') }}" method="POST" id="scanForm" data-loading-message="Memindai target..." data-loading-btn="Memindai...">
                     @csrf
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark">Target URL <span
@@ -95,6 +95,23 @@
                     </div>
                 </div>
             </x-card>
+
+            <x-card title="ℹ️ Tentang Alat" class="gutter-b shadow-sm">
+                <div class="text-dark-75 font-size-sm">
+                    <h6 class="font-weight-bolder mb-2 text-primary">Deskripsi Fungsi:</h6>
+                    <p class="text-muted mb-4">Memindai situs target untuk mengidentifikasi celah keamanan, konfigurasi SSL/TLS, keamanan web server, kepatuhan GDPR & PCI DSS, serta menganalisis header keamanan HTTP.</p>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Cara Penggunaan:</h6>
+                    <ol class="text-muted mb-4 pl-4">
+                        <li>Masukkan URL lengkap target (termasuk https:// atau http://).</li>
+                        <li>Klik tombol <strong>Scan Website</strong> untuk memulai pemindaian.</li>
+                        <li>Tunggu hingga analisis selesai untuk melihat laporannya secara instan.</li>
+                    </ol>
+                    
+                    <h6 class="font-weight-bolder mb-2 text-primary">Penjelasan Hasil:</h6>
+                    <p class="text-muted mb-0">Menampilkan skor total (0-100), klasifikasi kerentanan (Tinggi, Sedang, Rendah) beserta panduan langkah mitigasi taktis untuk mengamankan situs.</p>
+                </div>
+            </x-card>
         </div>
 
         <!-- Result Section -->
@@ -106,69 +123,3 @@
         </div>
     </div>
 </x-public-layout>
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var form = document.getElementById('scanForm');
-            if (!form) return;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                var url = form.action;
-                var formData = new FormData(form);
-                var resultContainer = document.getElementById('resultContainer');
-
-                // Block UI
-                KTApp.block(resultContainer, {
-                    overlayColor: '#000000',
-                    state: 'primary',
-                    message: 'Scanning Target...',
-                    opacity: 0.3
-                });
-
-                // Disable button
-                var btn = form.querySelector('button[type="submit"]');
-                var originalBtnHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="spinner spinner-white spinner-right pr-4"></i> Scanning...';
-                btn.disabled = true;
-
-                fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute(
-                                    'content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        KTApp.unblock(resultContainer);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-
-                        if (data.html) {
-                            resultContainer.innerHTML = data.html;
-                            // Re-init Metronic components if needed (scrollers, accordions, etc inside partial)
-                            // KTApp.init(); // Often safe to re-run or just specific inits
-                        }
-
-                        // Scroll to result
-                        resultContainer.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    })
-                    .catch(error => {
-                        KTApp.unblock(resultContainer);
-                        btn.innerHTML = originalBtnHtml;
-                        btn.disabled = false;
-                        console.error('Error:', error);
-                        toastr.error('An error occurred during the scan. Please try again.');
-                    });
-            });
-        });
-    </script>
-@endpush

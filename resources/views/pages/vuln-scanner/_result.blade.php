@@ -1,17 +1,16 @@
 @if (isset($res) && isset($res['url']))
-    <x-card title="📊 Security Report for {{ $res['url'] }}" class="card-stretch gutter-b">
+    <x-card title="📊 Laporan Keamanan untuk {{ $res['url'] }}" class="card-stretch gutter-b">
 
         <!-- Grade Section -->
-        <div class="d-flex align-items-center justify-content-between mb-10 p-5 bg-light-{{ $res['color'] }} rounded">
-            <div class="d-flex align-items-center">
-                <div class="symbol symbol-70 symbol-circle symbol-white mr-5">
+        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between mb-10 p-5 bg-light-{{ $res['color'] }} rounded text-center text-sm-left">
+            <div class="d-flex flex-column flex-sm-row align-items-center">
+                <div class="symbol symbol-70 symbol-circle symbol-white mr-0 mr-sm-5 mb-4 mb-sm-0">
                     <span class="symbol-label font-size-h2 font-weight-boldest text-{{ $res['color'] }}">
                         {{ $res['grade'] }}
                     </span>
                 </div>
                 <div class="d-flex flex-column">
-                    <h3 class="font-weight-bolder text-{{ $res['color'] }}">Score: {{ $res['score'] }}/100
-                    </h3>
+                    <h3 class="font-weight-bolder text-{{ $res['color'] }} mb-1">Skor: {{ $res['score'] }}/100</h3>
                     <span class="text-dark-50 font-weight-bold">
                         @if ($res['score'] >= 90)
                             Sangat Aman
@@ -25,7 +24,7 @@
                     </span>
                 </div>
             </div>
-            <div class="font-weight-bolder font-size-h5 text-dark-50">HTTP {{ $res['status_code'] }}</div>
+            <div class="font-weight-bolder font-size-h5 text-dark-50 mt-3 mt-sm-0">HTTP {{ $res['status_code'] }}</div>
         </div>
 
         <!-- Summary Section -->
@@ -87,13 +86,13 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 @if ($rec['priority'] === 'critical')
-                                    <span class="label label-danger label-inline font-weight-bold mr-3">CRITICAL</span>
+                                    <span class="label label-danger label-inline font-weight-bold mr-3">KRITIS</span>
                                 @elseif($rec['priority'] === 'high')
-                                    <span class="label label-warning label-inline font-weight-bold mr-3">HIGH</span>
+                                    <span class="label label-warning label-inline font-weight-bold mr-3">TINGGI</span>
                                 @elseif($rec['priority'] === 'medium')
-                                    <span class="label label-info label-inline font-weight-bold mr-3">MEDIUM</span>
+                                    <span class="label label-info label-inline font-weight-bold mr-3">SEDANG</span>
                                 @else
-                                    <span class="label label-light label-inline font-weight-bold mr-3">LOW</span>
+                                    <span class="label label-light label-inline font-weight-bold mr-3">RENDAH</span>
                                 @endif
                                 <h5 class="font-weight-bolder text-dark mb-0">{{ $rec['title'] }}</h5>
                             </div>
@@ -116,15 +115,15 @@
         </div>
     </x-card>
 @else
-    <x-card title="⏳ Waiting for Input" class="card-stretch gutter-b">
+    <x-card title="⏳ Menunggu Input" class="card-stretch gutter-b">
         <div class="d-flex flex-column align-items-center justify-content-center h-100 min-h-300px text-center">
             <div class="symbol symbol-100 symbol-light-info mb-5">
                 <span class="symbol-label">
                     <i class="flaticon2-protection icon-4x text-info"></i>
                 </span>
             </div>
-            <h4 class="font-weight-bolder text-dark">Enter a website URL</h4>
-            <p class="text-muted">Scan using strict security scoring standards.</p>
+            <h4 class="font-weight-bolder text-dark">Masukkan URL website</h4>
+            <p class="text-muted">Pindai menggunakan standar penilaian keamanan yang ketat.</p>
         </div>
     </x-card>
 @endif

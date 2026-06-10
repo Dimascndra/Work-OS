@@ -79,7 +79,7 @@ class DnsSecAnalyzerController extends Controller
                 $count = count($ds);
                 $events[] = [
                     'type' => 'success',
-                    'message' => "Found {$count} DS records for {$zoneName} in the {$parent} zone",
+                    'message' => "Menemukan {$count} record DS untuk {$zoneName} di zona {$parent}",
                     'icon' => 'flaticon2-check-mark'
                 ];
 
@@ -88,7 +88,7 @@ class DnsSecAnalyzerController extends Controller
                     if ($tag) {
                         $events[] = [
                             'type' => 'success',
-                            'message' => "DS={$tag}/SHA-256 has algorithm RSASHA256",
+                            'message' => "DS={$tag}/SHA-256 memiliki algoritma RSASHA256",
                             'icon' => 'flaticon2-check-mark'
                         ];
                     }
@@ -116,14 +116,14 @@ class DnsSecAnalyzerController extends Controller
                 if (!empty($dsSigs)) {
                     $events[] = [
                         'type' => 'success',
-                        'message' => "Found " . count($dsSigs) . " RRSIGs over DS RRset",
+                        'message' => "Menemukan " . count($dsSigs) . " RRSIG di atas RRset DS",
                         'icon' => 'flaticon2-check-mark'
                     ];
                     $tag = $this->extractKeyTagFromRRSIG($dsSigs[0]['data'] ?? '');
                     if ($tag) {
                         $events[] = [
                             'type' => 'success',
-                            'message' => "RRSIG={$tag} and DNSKEY={$tag} verifies the DS RRset",
+                            'message' => "RRSIG={$tag} dan DNSKEY={$tag} memverifikasi RRset DS",
                             'icon' => 'flaticon2-check-mark'
                         ];
                     }
@@ -134,7 +134,7 @@ class DnsSecAnalyzerController extends Controller
             } else {
                 $events[] = [
                     'type' => 'info', // Info, not error, as not all zones are signed
-                    'message' => "No DS records found for {$zoneName} in the {$parent} zone",
+                    'message' => "Tidak ditemukan record DS untuk {$zoneName} di zona {$parent}",
                     'icon' => 'flaticon2-information'
                 ];
                 $status = 'info'; // Downgrade status if chain breaks (but strictly speaking, insecure is valid DNS)
@@ -149,7 +149,7 @@ class DnsSecAnalyzerController extends Controller
             $count = count($dnskeys);
             $events[] = [
                 'type' => 'success',
-                'message' => "Found {$count} DNSKEY records for {$zoneName}",
+                'message' => "Menemukan {$count} record DNSKEY untuk {$zoneName}",
                 'icon' => 'flaticon2-check-mark',
             ];
 
@@ -159,14 +159,14 @@ class DnsSecAnalyzerController extends Controller
                 if ($dsTag) {
                     $events[] = [
                         'type' => 'success',
-                        'message' => "DS={$dsTag}/SHA-256 verifies DNSKEY={$dsTag}/SEP",
+                        'message' => "DS={$dsTag}/SHA-256 memverifikasi DNSKEY={$dsTag}/SEP",
                         'icon' => 'flaticon2-check-mark'
                     ];
                 }
             } elseif ($zoneName === '.') {
                 $events[] = [
                     'type' => 'success',
-                    'message' => "DS=20326/SHA-256 verifies DNSKEY=20326/SEP",
+                    'message' => "DS=20326/SHA-256 memverifikasi DNSKEY=20326/SEP",
                     'icon' => 'flaticon2-check-mark'
                 ];
             }
@@ -179,7 +179,7 @@ class DnsSecAnalyzerController extends Controller
                 $sigCount = count($dnskeySigs);
                 $events[] = [
                     'type' => 'success',
-                    'message' => "Found {$sigCount} RRSIGs over DNSKEY RRset",
+                    'message' => "Menemukan {$sigCount} RRSIG di atas RRset DNSKEY",
                     'icon' => 'flaticon2-check-mark'
                 ];
 
@@ -187,14 +187,14 @@ class DnsSecAnalyzerController extends Controller
                 if ($tag) {
                     $events[] = [
                         'type' => 'success',
-                        'message' => "RRSIG={$tag} and DNSKEY={$tag}/SEP verifies the DNSKEY RRset",
+                        'message' => "RRSIG={$tag} dan DNSKEY={$tag}/SEP memverifikasi RRset DNSKEY",
                         'icon' => 'flaticon2-check-mark'
                     ];
                 }
             } else {
                 $events[] = [
                     'type' => 'warning',
-                    'message' => "No RRSIGs found for DNSKEY in {$zoneName}",
+                    'message' => "Tidak ditemukan RRSIG untuk DNSKEY di {$zoneName}",
                     'icon' => 'flaticon2-warning'
                 ];
                 $status = 'warning';
@@ -202,7 +202,7 @@ class DnsSecAnalyzerController extends Controller
         } else {
             $events[] = [
                 'type' => 'warning',
-                'message' => "No DNSKEY records found for {$zoneName}",
+                'message' => "Tidak ditemukan record DNSKEY untuk {$zoneName}",
                 'icon' => 'flaticon2-warning'
             ];
             // If no DS was found either, it's just unsigned, not necessarily a warning failure unless we expect it.
@@ -226,7 +226,7 @@ class DnsSecAnalyzerController extends Controller
             $authServer = rtrim($ns[0]['data'] ?? 'ns1.example.com', '.');
             $analysis['events'][] = [
                 'type' => 'success',
-                'message' => "{$authServer} is authoritative for {$domain}",
+                'message' => "{$authServer} bersifat otoritatif untuk {$domain}",
                 'icon' => 'flaticon2-check-mark'
             ];
         }
@@ -237,7 +237,7 @@ class DnsSecAnalyzerController extends Controller
             $ip = $a[0]['data'] ?? '0.0.0.0';
             $analysis['events'][] = [
                 'type' => 'success',
-                'message' => "{$domain} A RR has value {$ip}",
+                'message' => "RR A {$domain} memiliki nilai {$ip}",
                 'icon' => 'flaticon2-check-mark'
             ];
 
@@ -249,7 +249,7 @@ class DnsSecAnalyzerController extends Controller
             if (!empty($aSigs)) {
                 $analysis['events'][] = [
                     'type' => 'success',
-                    'message' => "Found " . count($aSigs) . " RRSIGs over A RRset",
+                    'message' => "Menemukan " . count($aSigs) . " RRSIG di atas RRset A",
                     'icon' => 'flaticon2-check-mark'
                 ];
 
@@ -257,7 +257,7 @@ class DnsSecAnalyzerController extends Controller
                 if ($tag) {
                     $analysis['events'][] = [
                         'type' => 'success',
-                        'message' => "RRSIG={$tag} and DNSKEY={$tag} verifies the A RRset",
+                        'message' => "RRSIG={$tag} dan DNSKEY={$tag} memverifikasi RRset A",
                         'icon' => 'flaticon2-check-mark'
                     ];
                 }

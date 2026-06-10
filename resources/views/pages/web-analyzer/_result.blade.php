@@ -5,7 +5,7 @@
             <div
                 class="card card-custom gutter-b bg-light-{{ $res['overall_score'] >= 90 ? 'success' : ($res['overall_score'] >= 70 ? 'warning' : 'danger') }}">
                 <div class="card-body text-center p-5">
-                    <h4 class="card-label font-weight-bolder text-dark-75 mb-2">Overall Score</h4>
+                    <h4 class="card-label font-weight-bolder text-dark-75 mb-2">Skor Keseluruhan</h4>
                     <div class="display-3 font-weight-boldest text-dark mb-2">{{ $res['overall_score'] }}
                     </div>
                     <div class="text-dark-50 font-weight-bold">/ 100</div>
@@ -20,17 +20,16 @@
                         <span class="symbol-label"><i class="flaticon2-time text-primary"></i></span>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="text-dark-75 font-weight-bold font-size-lg">Performance</div>
-                        <span class="text-muted font-weight-bold">{{ $res['performance']['grade'] }}
-                            Grade</span>
+                        <div class="text-dark-75 font-weight-bold font-size-lg">Kinerja</div>
+                        <span class="text-muted font-weight-bold">Kategori {{ $res['performance']['grade'] }}</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-dark-50 font-weight-bold">Load Time:</span>
+                    <span class="text-dark-50 font-weight-bold">Waktu Pemuatan:</span>
                     <span class="text-dark font-weight-bold">{{ $res['performance']['load_time'] }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="text-dark-50 font-weight-bold">Page Size:</span>
+                    <span class="text-dark-50 font-weight-bold">Ukuran Halaman:</span>
                     <span class="text-dark font-weight-bold">{{ $res['performance']['size'] }}</span>
                 </div>
             </x-card>
@@ -43,22 +42,22 @@
                         <span class="symbol-label"><i class="flaticon2-search text-info"></i></span>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="text-dark-75 font-weight-bold font-size-lg">SEO stats</div>
-                        <span class="text-muted font-weight-bold">Meta Tags</span>
+                        <div class="text-dark-75 font-weight-bold font-size-lg">Statistik SEO</div>
+                        <span class="text-muted font-weight-bold">Tag Meta</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-dark-50 font-weight-bold">Title:</span>
+                    <span class="text-dark-50 font-weight-bold">Judul:</span>
                     <span
                         class="label label-light-{{ $res['seo_data']['title'] ? 'success' : 'danger' }} label-inline font-weight-bold">
-                        {{ $res['seo_data']['title'] ? 'Found' : 'Missing' }}
+                        {{ $res['seo_data']['title'] ? 'Ditemukan' : 'Tidak Ditemukan' }}
                     </span>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="text-dark-50 font-weight-bold">Desc:</span>
+                    <span class="text-dark-50 font-weight-bold">Deskripsi:</span>
                     <span
                         class="label label-light-{{ $res['seo_data']['description'] ? 'success' : 'danger' }} label-inline font-weight-bold">
-                        {{ $res['seo_data']['description'] ? 'Found' : 'Missing' }}
+                        {{ $res['seo_data']['description'] ? 'Ditemukan' : 'Tidak Ditemukan' }}
                     </span>
                 </div>
             </x-card>
@@ -71,8 +70,8 @@
                         <span class="symbol-label"><i class="flaticon2-shield text-warning"></i></span>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="text-dark-75 font-weight-bold font-size-lg">Tech Stack</div>
-                        <span class="text-muted font-weight-bold">Server Info</span>
+                        <div class="text-dark-75 font-weight-bold font-size-lg">Teknologi</div>
+                        <span class="text-muted font-weight-bold">Info Server</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
@@ -80,7 +79,7 @@
                     <span class="text-dark font-weight-bold">{{ Str::limit($res['tech']['Server'], 10) }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="text-dark-50 font-weight-bold">App:</span>
+                    <span class="text-dark-50 font-weight-bold">Aplikasi:</span>
                     <span class="text-dark font-weight-bold">{{ Str::limit($res['tech']['X-Powered-By'], 10) }}</span>
                 </div>
             </x-card>
@@ -91,7 +90,7 @@
     <div class="row">
         <!-- SEO Details -->
         <div class="col-lg-6">
-            <x-card title="SEO Analysis" class="card-stretch gutter-b" :toolbar="false">
+            <x-card title="Analisis SEO" class="card-stretch gutter-b" :toolbar="false">
                 <div class="table-responsive">
                     <table class="table table-borderless table-vertical-center">
                         <tbody>
@@ -123,7 +122,7 @@
 
         <!-- Security Details -->
         <div class="col-lg-6">
-            <x-card title="Security Headers" class="card-stretch gutter-b" :toolbar="false">
+            <x-card title="Header Keamanan" class="card-stretch gutter-b" :toolbar="false">
                 <div class="table-responsive">
                     <table class="table table-borderless table-vertical-center">
                         <tbody>
@@ -146,7 +145,7 @@
                                     <td class="text-right pr-0">
                                         <span
                                             class="label label-light-{{ $info['passed'] ? 'success' : 'danger' }} label-inline font-weight-bold">
-                                            {{ $info['passed'] ? 'Present' : 'Missing' }}
+                                            {{ $info['passed'] ? 'Ada' : 'Tidak Ada' }}
                                         </span>
                                     </td>
                                 </tr>
@@ -161,14 +160,14 @@
     @if (!empty($res['advanced']))
         <div class="row">
             <div class="col-lg-12">
-                <x-card title="Advanced Signals" class="card-stretch gutter-b" :toolbar="false">
+                <x-card title="Sinyal Lanjutan" class="card-stretch gutter-b" :toolbar="false">
                     <div class="row">
                         <div class="col-md-4 mb-4">
-                            <span class="text-muted font-weight-bold d-block">Compression</span>
+                            <span class="text-muted font-weight-bold d-block">Kompresi</span>
                             <span class="text-dark font-weight-bolder">{{ $res['advanced']['compression'] }}</span>
                         </div>
                         <div class="col-md-4 mb-4">
-                            <span class="text-muted font-weight-bold d-block">Cache-Control</span>
+                            <span class="text-muted font-weight-bold d-block">Kontrol Cache</span>
                             <span class="text-dark font-weight-bolder">{{ Str::limit($res['advanced']['cache_control'], 45) }}</span>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -176,7 +175,7 @@
                             <span class="text-dark font-weight-bolder">{{ $res['advanced']['robots_txt'] }}</span>
                         </div>
                         <div class="col-md-4 mb-4 mb-md-0">
-                            <span class="text-muted font-weight-bold d-block">Canonical</span>
+                            <span class="text-muted font-weight-bold d-block">Kanonikal</span>
                             <span class="text-dark font-weight-bolder">{{ Str::limit($res['advanced']['canonical'], 45) }}</span>
                         </div>
                         <div class="col-md-4 mb-4 mb-md-0">
@@ -184,7 +183,7 @@
                             <span class="text-dark font-weight-bolder">{{ $res['advanced']['open_graph_tags'] }} tag</span>
                         </div>
                         <div class="col-md-4">
-                            <span class="text-muted font-weight-bold d-block">Language</span>
+                            <span class="text-muted font-weight-bold d-block">Bahasa</span>
                             <span class="text-dark font-weight-bolder">{{ $res['advanced']['language'] }}</span>
                         </div>
                     </div>
@@ -200,13 +199,13 @@
                 class="card card-custom gutter-b {{ empty($res['recommendations']) ? 'bg-light-success' : 'bg-light-warning' }}">
                 <div class="card-header border-0">
                     <h3 class="card-title font-weight-bolder text-dark">
-                        {{ empty($res['recommendations']) ? '🎉 Perfect! No Improvements Needed' : '🚀 Optimization Recommendations' }}
+                        {{ empty($res['recommendations']) ? '🎉 Sempurna! Tidak Ada Perbaikan yang Diperlukan' : '🚀 Rekomendasi Optimalisasi' }}
                     </h3>
                 </div>
                 <div class="card-body pt-0">
                     @if (empty($res['recommendations']))
                         <p class="text-dark-75 font-weight-bold font-size-lg mb-0">
-                            Your website passed all our checks with flying colors! Keep up the great work.
+                            Website Anda lolos semua pemeriksaan kami dengan sangat baik! Pertahankan kinerja luar biasa ini.
                         </p>
                     @else
                         <div class="table-responsive">
@@ -231,8 +230,7 @@
                             </table>
                         </div>
                         <div class="mt-3">
-                            <p class="text-muted font-weight-bold">Fixing these issues will improve your
-                                Overall Score towards 100/100.</p>
+                            <p class="text-muted font-weight-bold">Memperbaiki masalah ini akan meningkatkan Skor Keseluruhan Anda mendekati 100/100.</p>
                         </div>
                     @endif
                 </div>

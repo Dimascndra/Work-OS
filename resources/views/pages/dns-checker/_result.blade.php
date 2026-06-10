@@ -36,7 +36,7 @@
     <div class="col-lg-12 mb-5">
         <div class="card card-custom gutter-b">
             <div class="card-header border-0 pt-5">
-                <h3 class="card-title font-weight-bolder">Propagation Map</h3>
+                <h3 class="card-title font-weight-bolder">Peta Propagasi</h3>
             </div>
             <div class="card-body">
                 <div id="kt_jqvmap_world" class="jqvmap" style="height:400px; width: 100%;"></div>
@@ -48,7 +48,7 @@
     <div class="col-lg-12">
         <div class="card card-custom gutter-b">
             <div class="card-header border-0 pt-5">
-                <h3 class="card-title font-weight-bolder">Propagation Results</h3>
+                <h3 class="card-title font-weight-bolder">Hasil Propagasi</h3>
             </div>
             <div class="card-body pt-0">
                 <div class="table-responsive">
@@ -96,12 +96,12 @@
                                                 @endforeach
                                                 @if (count($r['data']) > 1)
                                                     <span class="text-muted font-size-xs">+{{ count($r['data']) - 1 }}
-                                                        more</span>
+                                                        lainnya</span>
                                                 @endif
                                             @elseif($r['status'] == 'empty')
-                                                <span class="text-muted font-weight-bold">No Records</span>
+                                                <span class="text-muted font-weight-bold">Tidak Ada Record</span>
                                             @else
-                                                <span class="text-danger font-weight-bold">Error</span>
+                                                <span class="text-danger font-weight-bold">Gagal</span>
                                             @endif
                                             @if (!empty($r['records'][0]['ttl']))
                                                 <span class="text-muted font-size-xs">TTL {{ $r['records'][0]['ttl'] }}s</span>
@@ -138,10 +138,9 @@
                         <i class="flaticon2-world icon-4x text-primary"></i>
                     </span>
                 </div>
-                <h3 class="font-size-h3 font-weight-bolder text-dark">Global DNS Propagation Checker</h3>
+                <h3 class="font-size-h3 font-weight-bolder text-dark">Pemeriksa Propagasi DNS Global</h3>
                 <p class="font-size-lg text-muted mt-3">
-                    Check A, MX, NS, CNAME, TXT and other DNS records against multiple DNS servers located in
-                    different parts of the world.
+                    Periksa DNS record A, MX, NS, CNAME, TXT, dan lainnya pada beberapa server DNS dari berbagai belahan dunia.
                 </p>
             </div>
         </div>

@@ -70,12 +70,12 @@ class WebAnalyzerController extends Controller
                 $headerMap[strtolower($key)] = is_array($value) ? implode(', ', $value) : $value;
             }
             $securityChecks = [
-                'X-Frame-Options' => ['desc' => 'Protects against Clickjacking', 'passed' => false],
-                'X-XSS-Protection' => ['desc' => 'Enables browser XSS filtering', 'passed' => false],
-                'X-Content-Type-Options' => ['desc' => 'Prevents MIME-sniffing', 'passed' => false],
-                'Strict-Transport-Security' => ['desc' => 'Enforces HTTPS (HSTS)', 'passed' => false],
-                'Content-Security-Policy' => ['desc' => 'Mitigates XSS and data injection', 'passed' => false],
-                'Referrer-Policy' => ['desc' => 'Controls referrer information', 'passed' => false],
+                'X-Frame-Options' => ['desc' => 'Melindungi dari serangan Clickjacking', 'passed' => false],
+                'X-XSS-Protection' => ['desc' => 'Mengaktifkan filter XSS pada browser', 'passed' => false],
+                'X-Content-Type-Options' => ['desc' => 'Mencegah MIME-sniffing', 'passed' => false],
+                'Strict-Transport-Security' => ['desc' => 'Memaksakan penggunaan HTTPS (HSTS)', 'passed' => false],
+                'Content-Security-Policy' => ['desc' => 'Memitigasi XSS dan injeksi data', 'passed' => false],
+                'Referrer-Policy' => ['desc' => 'Mengontrol informasi pengirim (referrer)', 'passed' => false],
             ];
 
             foreach ($securityChecks as $header => &$info) {
@@ -158,12 +158,12 @@ class WebAnalyzerController extends Controller
 
             // SEO Checks
             $seoChecks = [
-                'Title Tag' => ['passed' => !empty($title), 'val' => $title ?? 'Missing'],
-                'Meta Description' => ['passed' => !empty($description), 'val' => $description ? substr($description, 0, 50) . '...' : 'Missing'],
-                'H1 Heading' => ['passed' => $h1Count > 0, 'val' => $h1Count . ' found'],
-                'Image Alt text' => ['passed' => $imagesWithoutAlt === 0, 'val' => $imagesWithoutAlt . ' missing alt out of ' . $totalImages],
-                'Canonical URL' => ['passed' => !empty($canonical), 'val' => $canonical ? substr($canonical, 0, 60) : 'Missing'],
-                'Viewport Meta' => ['passed' => !empty($viewport), 'val' => $viewport ? 'Found' : 'Missing'],
+                'Tag Title' => ['passed' => !empty($title), 'val' => $title ?? 'Tidak Ada'],
+                'Meta Deskripsi' => ['passed' => !empty($description), 'val' => $description ? substr($description, 0, 50) . '...' : 'Tidak Ada'],
+                'Heading H1' => ['passed' => $h1Count > 0, 'val' => $h1Count . ' ditemukan'],
+                'Atribut Alt Gambar' => ['passed' => $imagesWithoutAlt === 0, 'val' => $imagesWithoutAlt . ' gambar tanpa alt dari total ' . $totalImages],
+                'URL Kanonikal' => ['passed' => !empty($canonical), 'val' => $canonical ? substr($canonical, 0, 60) : 'Tidak Ada'],
+                'Meta Viewport' => ['passed' => !empty($viewport), 'val' => $viewport ? 'Ditemukan' : 'Tidak Ada'],
             ];
 
             foreach ($seoChecks as $check) {
@@ -181,17 +181,17 @@ class WebAnalyzerController extends Controller
                 'viewport' => $viewport,
                 'canonical' => $canonical,
                 'open_graph_count' => $openGraph,
-                'lang' => $lang ?: 'Not set',
+                'lang' => $lang ?: 'Tidak disetel',
             ];
 
             // 4. Tech Stack (Simple Detection)
-            $server = $response->header('Server') ?? 'Hidden';
-            $poweredBy = $response->header('X-Powered-By') ?? 'Hidden';
+            $server = $response->header('Server') ?? 'Disembunyikan';
+            $poweredBy = $response->header('X-Powered-By') ?? 'Disembunyikan';
 
             $result['tech'] = [
                 'Server' => $server,
                 'X-Powered-By' => $poweredBy,
-                'Generator' => $generator ?? 'Not Detected',
+                'Generator' => $generator ?? 'Tidak Terdeteksi',
             ];
 
             $robotsUrl = rtrim(parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST), '/') . '/robots.txt';
@@ -199,16 +199,16 @@ class WebAnalyzerController extends Controller
             try {
                 $robotsStatus = Http::timeout(5)->get($robotsUrl)->status();
             } catch (\Exception $e) {
-                $robotsStatus = 'unreachable';
+                $robotsStatus = 'tidak dapat dijangkau';
             }
 
             $result['advanced'] = [
-                'compression' => $headerMap['content-encoding'] ?? 'Not detected',
-                'cache_control' => $headerMap['cache-control'] ?? 'Not set',
+                'compression' => $headerMap['content-encoding'] ?? 'Tidak terdeteksi',
+                'cache_control' => $headerMap['cache-control'] ?? 'Tidak disetel',
                 'robots_txt' => $robotsStatus,
-                'canonical' => $canonical ?: 'Not set',
+                'canonical' => $canonical ?: 'Tidak disetel',
                 'open_graph_tags' => $openGraph,
-                'language' => $lang ?: 'Not set',
+                'language' => $lang ?: 'Tidak disetel',
             ];
 
             // 5. Recommendations
@@ -216,26 +216,26 @@ class WebAnalyzerController extends Controller
 
             // Performance Recs
             if ($loadTime > 500) {
-                $recommendations[] = 'Optimize images and scripts to reduce Load Time (currently ' . $loadTime . 'ms). Goal: < 500ms.';
+                $recommendations[] = 'Optimalkan gambar dan skrip untuk mengurangi Waktu Pemuatan (saat ini ' . $loadTime . 'ms). Target: < 500ms.';
             }
             if ($size > 2048 * 1024) { // 2MB
-                $recommendations[] = 'Page size is large (' . round($size / 1024, 2) . 'KB). Enable compression (Gzip/Brotli) or minify assets.';
+                $recommendations[] = 'Ukuran halaman sangat besar (' . round($size / 1024, 2) . 'KB). Aktifkan kompresi (Gzip/Brotli) atau perkecil aset.';
             }
 
             // SEO Recs
-            if (empty($title)) $recommendations[] = 'Add a <title> tag to specificy the page title for search engines.';
-            if (empty($description)) $recommendations[] = 'Add a <meta name="description"> tag to improve click-through rates from search results.';
-            if ($h1Count === 0) $recommendations[] = 'Add a main <h1> heading to structure your content hierarchy.';
-            if ($imagesWithoutAlt > 0) $recommendations[] = 'Add "alt" attributes to ' . $imagesWithoutAlt . ' images to improve accessibility and SEO.';
-            if (empty($canonical)) $recommendations[] = 'Add a canonical link to reduce duplicate-content ambiguity.';
-            if (empty($viewport)) $recommendations[] = 'Add a viewport meta tag for better mobile rendering.';
-            if ($openGraph === 0) $recommendations[] = 'Add Open Graph meta tags so shared links have better previews.';
+            if (empty($title)) $recommendations[] = 'Tambahkan tag <title> untuk menentukan judul halaman bagi mesin pencari.';
+            if (empty($description)) $recommendations[] = 'Tambahkan tag <meta name="description"> untuk meningkatkan rasio klik dari hasil pencarian.';
+            if ($h1Count === 0) $recommendations[] = 'Tambahkan heading utama <h1> untuk menyusun hierarki konten Anda.';
+            if ($imagesWithoutAlt > 0) $recommendations[] = 'Tambahkan atribut "alt" pada ' . $imagesWithoutAlt . ' gambar untuk meningkatkan aksesibilitas dan SEO.';
+            if (empty($canonical)) $recommendations[] = 'Tambahkan tautan kanonikal untuk mengurangi ambiguitas konten duplikat.';
+            if (empty($viewport)) $recommendations[] = 'Tambahkan tag meta viewport untuk tampilan mobile yang lebih baik.';
+            if ($openGraph === 0) $recommendations[] = 'Tambahkan tag meta Open Graph agar tautan yang dibagikan memiliki pratinjau yang lebih baik.';
 
             // Security Recs
-            if (!$securityChecks['Strict-Transport-Security']['passed']) $recommendations[] = 'Enable "Strict-Transport-Security" (HSTS) to enforce HTTPS connections.';
-            if (!$securityChecks['X-Frame-Options']['passed']) $recommendations[] = 'Add "X-Frame-Options" header (DENY or SAMEORIGIN) to prevent Clickjacking.';
-            if (!$securityChecks['Content-Security-Policy']['passed']) $recommendations[] = 'Implement a "Content-Security-Policy" (CSP) to prevent XSS and data injection.';
-            if (!$securityChecks['X-Content-Type-Options']['passed']) $recommendations[] = 'Add "X-Content-Type-Options: nosniff" to prevent MIME-type sniffing.';
+            if (!$securityChecks['Strict-Transport-Security']['passed']) $recommendations[] = 'Aktifkan "Strict-Transport-Security" (HSTS) untuk memaksakan koneksi HTTPS.';
+            if (!$securityChecks['X-Frame-Options']['passed']) $recommendations[] = 'Tambahkan header "X-Frame-Options" (DENY atau SAMEORIGIN) untuk mencegah Clickjacking.';
+            if (!$securityChecks['Content-Security-Policy']['passed']) $recommendations[] = 'Terapkan "Content-Security-Policy" (CSP) untuk mencegah XSS dan injeksi data.';
+            if (!$securityChecks['X-Content-Type-Options']['passed']) $recommendations[] = 'Tambahkan "X-Content-Type-Options: nosniff" untuk mencegah MIME-type sniffing.';
 
             $result['recommendations'] = $recommendations;
 
