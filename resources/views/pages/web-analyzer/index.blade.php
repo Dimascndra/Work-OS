@@ -27,15 +27,6 @@
                         </div>
                     </div>
                 </form>
-
-                <div class="separator separator-border-dashed my-5"></div>
-
-                <div id="resultContainer">
-                    @include('pages.web-analyzer._result', [
-                        'res' => session('web_analyzer_result'),
-                        'error' => session('error'),
-                    ])
-                </div>
             </x-card>
         </div>
 
@@ -59,4 +50,13 @@
             </x-card>
         </div>
     </div>
+
+    <!-- Result Section (Full Width) -->
+    <div class="row" id="resultContainer">
+        @include('pages.web-analyzer._result', [
+            'res' => session('web_analyzer_result'),
+            'error' => session('error'),
+        ])
+    </div>
 </x-public-layout>
+

@@ -79,11 +79,7 @@
 </x-public-layout>
 
 @push('scripts')
-    {{-- <script src="{{ asset('assets/plugins/custom/jqvmap/jqvmap.bundle.js') }}"></script> --}}
-    <!-- JQVMap via CDN to ensure integrity and no conflicts -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js"></script>
+    <script src="{{ asset('assets/plugins/custom/jqvmap/jqvmap.bundle.js') }}"></script>
     <script>
         function initDnsMap(results) {
             // Clear existing if any

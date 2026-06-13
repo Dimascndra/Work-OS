@@ -74,7 +74,7 @@
                                     </td>
 
                                     <!-- Location & Provider -->
-                                    <td class="pl-2">
+                                    <td class="pl-2" style="white-space: nowrap; vertical-align: middle;">
                                         <div class="d-flex flex-column">
                                             <a href="#"
                                                 class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">
@@ -87,12 +87,12 @@
                                     </td>
 
                                     <!-- IP / Result (Right Aligned, Blue) -->
-                                    <td class="text-right pr-5">
+                                    <td class="text-right pr-5" style="word-break: break-all; min-width: 150px; max-width: 300px; vertical-align: middle;">
                                         <div class="d-flex flex-column align-items-end">
                                             @if ($r['status'] == 'success' && !empty($r['data']))
                                                 @foreach (array_slice($r['data'], 0, 1) as $rec)
                                                     <span
-                                                        class="text-primary font-weight-bolder font-size-h6">{{ $rec }}</span>
+                                                        class="text-primary font-weight-bolder font-size-h6" style="word-break: break-all;">{{ $rec }}</span>
                                                 @endforeach
                                                 @if (count($r['data']) > 1)
                                                     <span class="text-muted font-size-xs">+{{ count($r['data']) - 1 }}
